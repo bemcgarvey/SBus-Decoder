@@ -1,0 +1,387 @@
+EESchema Schematic File Version 4
+EELAYER 30 0
+EELAYER END
+$Descr USLetter 11000 8500
+encoding utf-8
+Sheet 1 1
+Title "SBus Decoder"
+Date ""
+Rev "1.0"
+Comp "Quantum Embedded Systems"
+Comment1 ""
+Comment2 ""
+Comment3 ""
+Comment4 ""
+$EndDescr
+$Comp
+L PIC16F18313:PIC16F18313-I_SN U2
+U 1 1 60EFBC4A
+P 4000 3650
+F 0 "U2" H 5400 4037 60  0000 C CNN
+F 1 "PIC16F18313-I_SN" H 5400 3931 60  0000 C CNN
+F 2 "SOIC8_SN_MCH" H 5400 3890 60  0001 C CNN
+F 3 "" H 4000 3650 60  0000 C CNN
+	1    4000 3650
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J4
+U 1 1 60F0F917
+P 8250 3600
+F 0 "J4" H 8358 3881 50  0000 C CNN
+F 1 "Conn_01x03_Male" H 8358 3790 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 8250 3600 50  0001 C CNN
+F 3 "~" H 8250 3600 50  0001 C CNN
+	1    8250 3600
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Device:C C1
+U 1 1 60F13FE1
+P 4450 1500
+F 0 "C1" H 4565 1546 50  0000 L CNN
+F 1 "1 uF" H 4565 1455 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 4488 1350 50  0001 C CNN
+F 3 "~" H 4450 1500 50  0001 C CNN
+	1    4450 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:LED D1
+U 1 1 60F1465B
+P 6900 5300
+F 0 "D1" H 6893 5517 50  0000 C CNN
+F 1 "LED-Red" H 6893 5426 50  0000 C CNN
+F 2 "LED_SMD:LED_0603_1608Metric" H 6900 5300 50  0001 C CNN
+F 3 "~" H 6900 5300 50  0001 C CNN
+	1    6900 5300
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Device:R R1
+U 1 1 60F14C7E
+P 6900 4650
+F 0 "R1" H 6970 4696 50  0000 L CNN
+F 1 "220" H 6970 4605 50  0000 L CNN
+F 2 "Resistor_SMD:R_0603_1608Metric" V 6830 4650 50  0001 C CNN
+F 3 "~" H 6900 4650 50  0001 C CNN
+	1    6900 4650
+	-1   0    0    1   
+$EndComp
+$Comp
+L power:GND #PWR07
+U 1 1 60F15387
+P 7950 4850
+F 0 "#PWR07" H 7950 4600 50  0001 C CNN
+F 1 "GND" H 7955 4677 50  0000 C CNN
+F 2 "" H 7950 4850 50  0001 C CNN
+F 3 "" H 7950 4850 50  0001 C CNN
+	1    7950 4850
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J2
+U 1 1 60F26177
+P 2050 1700
+F 0 "J2" V 2050 1900 50  0000 C CNN
+F 1 "Conn_01x03_Male" H 2158 1890 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 2050 1700 50  0001 C CNN
+F 3 "~" H 2050 1700 50  0001 C CNN
+	1    2050 1700
+	0    -1   1    0   
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J5
+U 1 1 60F264CF
+P 8250 4450
+F 0 "J5" H 8358 4731 50  0000 C CNN
+F 1 "Conn_01x03_Male" H 8358 4640 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 8250 4450 50  0001 C CNN
+F 3 "~" H 8250 4450 50  0001 C CNN
+	1    8250 4450
+	-1   0    0    -1  
+$EndComp
+$Comp
+L Regulator_Linear:MCP1703A-3302_SOT223 U1
+U 1 1 60F273AB
+P 5200 1250
+F 0 "U1" H 5200 1492 50  0000 C CNN
+F 1 "MCP1703A-3302_SOT223" H 5200 1401 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 5200 1450 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005122B.pdf" H 5200 1200 50  0001 C CNN
+	1    5200 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C2
+U 1 1 60F28E0E
+P 5950 1500
+F 0 "C2" H 6065 1546 50  0000 L CNN
+F 1 "1 uF" H 6065 1455 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 5988 1350 50  0001 C CNN
+F 3 "~" H 5950 1500 50  0001 C CNN
+	1    5950 1500
+	1    0    0    -1  
+$EndComp
+$Comp
+L Device:C C3
+U 1 1 60F28F04
+P 5400 2950
+F 0 "C3" V 5300 3050 50  0000 L CNN
+F 1 "0.1 uF" V 5200 2850 50  0000 L CNN
+F 2 "Capacitor_SMD:C_0603_1608Metric" H 5438 2800 50  0001 C CNN
+F 3 "~" H 5400 2950 50  0001 C CNN
+	1    5400 2950
+	0    1    1    0   
+$EndComp
+$Comp
+L power:GND #PWR04
+U 1 1 60F291DB
+P 6150 3050
+F 0 "#PWR04" H 6150 2800 50  0001 C CNN
+F 1 "GND" H 6155 2877 50  0000 C CNN
+F 2 "" H 6150 3050 50  0001 C CNN
+F 3 "" H 6150 3050 50  0001 C CNN
+	1    6150 3050
+	1    0    0    -1  
+$EndComp
+$Comp
+L Connector:Conn_01x02_Male J3
+U 1 1 60F29653
+P 3450 4650
+F 0 "J3" V 3558 4831 50  0000 C CNN
+F 1 "Conn_01x02_Male" H 3558 4740 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 3450 4650 50  0001 C CNN
+F 3 "~" H 3450 4650 50  0001 C CNN
+	1    3450 4650
+	0    -1   -1   0   
+$EndComp
+$Comp
+L Connector:Conn_01x03_Male J1
+U 1 1 60F0F0EB
+P 1300 1700
+F 0 "J1" V 1300 1900 50  0000 C CNN
+F 1 "Conn_01x03_Male" H 1408 1890 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 1300 1700 50  0001 C CNN
+F 3 "~" H 1300 1700 50  0001 C CNN
+	1    1300 1700
+	0    -1   1    0   
+$EndComp
+Text Notes 1450 1550 0    50   ~ 0
+SBUS In/Out
+Text Notes 8500 3600 0    50   ~ 0
+Servo 1
+Text Notes 8500 4450 0    50   ~ 0
+Servo 2
+Text Notes 3350 4900 0    50   ~ 0
+ICSP \nVdd Vpp
+Wire Wire Line
+	4000 3650 3450 3650
+Wire Wire Line
+	3450 3650 3450 4450
+Wire Wire Line
+	4000 3950 3550 3950
+Wire Wire Line
+	3550 3950 3550 4450
+Wire Wire Line
+	5550 2950 6150 2950
+Wire Wire Line
+	6800 2950 6800 3650
+Wire Wire Line
+	3450 2950 3450 3650
+Connection ~ 3450 3650
+Wire Wire Line
+	6150 3050 6150 2950
+Connection ~ 6150 2950
+Wire Wire Line
+	6150 2950 6800 2950
+Wire Wire Line
+	5500 1250 5950 1250
+Wire Wire Line
+	5950 1250 5950 1350
+Wire Wire Line
+	5950 1250 6250 1250
+Connection ~ 5950 1250
+Wire Wire Line
+	4900 1250 4450 1250
+Wire Wire Line
+	4450 1250 4450 1350
+$Comp
+L power:GND #PWR03
+U 1 1 60F2B5D7
+P 5200 1900
+F 0 "#PWR03" H 5200 1650 50  0001 C CNN
+F 1 "GND" H 5205 1727 50  0000 C CNN
+F 2 "" H 5200 1900 50  0001 C CNN
+F 3 "" H 5200 1900 50  0001 C CNN
+	1    5200 1900
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	5200 1550 5200 1750
+Wire Wire Line
+	4450 1650 4450 1750
+Wire Wire Line
+	4450 1750 5200 1750
+Connection ~ 5200 1750
+Wire Wire Line
+	5200 1750 5200 1900
+Wire Wire Line
+	5950 1650 5950 1750
+Wire Wire Line
+	5950 1750 5200 1750
+Wire Wire Line
+	6800 3750 7050 3750
+Wire Wire Line
+	7050 3750 7050 3500
+Wire Wire Line
+	7050 3500 8050 3500
+Wire Wire Line
+	6800 3850 7100 3850
+Wire Wire Line
+	7100 3850 7100 4350
+Wire Wire Line
+	7100 4350 8050 4350
+Wire Wire Line
+	8050 4450 7850 4450
+Wire Wire Line
+	7850 4450 7850 3600
+Wire Wire Line
+	7850 3600 8050 3600
+Wire Wire Line
+	8050 3700 7950 3700
+Wire Wire Line
+	7950 3700 7950 4550
+Wire Wire Line
+	8050 4550 7950 4550
+Connection ~ 7950 4550
+Wire Wire Line
+	7950 4550 7950 4850
+$Comp
+L power:VBUS #PWR06
+U 1 1 60F32EF0
+P 7850 3250
+F 0 "#PWR06" H 7850 3100 50  0001 C CNN
+F 1 "VBUS" H 7865 3423 50  0000 C CNN
+F 2 "" H 7850 3250 50  0001 C CNN
+F 3 "" H 7850 3250 50  0001 C CNN
+	1    7850 3250
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	7850 3600 7850 3250
+Connection ~ 7850 3600
+$Comp
+L power:VBUS #PWR01
+U 1 1 60F33FE8
+P 900 2100
+F 0 "#PWR01" H 900 1950 50  0001 C CNN
+F 1 "VBUS" V 915 2227 50  0000 L CNN
+F 2 "" H 900 2100 50  0001 C CNN
+F 3 "" H 900 2100 50  0001 C CNN
+	1    900  2100
+	0    -1   -1   0   
+$EndComp
+Wire Wire Line
+	900  2100 1300 2100
+Wire Wire Line
+	1300 2100 1300 1900
+Wire Wire Line
+	2050 1900 2050 2100
+Wire Wire Line
+	2050 2100 1300 2100
+Connection ~ 1300 2100
+Wire Wire Line
+	1200 1900 1200 2300
+Wire Wire Line
+	1200 2300 1950 2300
+Wire Wire Line
+	1950 2300 1950 1900
+Wire Wire Line
+	1400 1900 1400 2000
+Wire Wire Line
+	1400 2000 2150 2000
+Wire Wire Line
+	2150 2000 2150 1900
+$Comp
+L power:GND #PWR02
+U 1 1 60F37DA9
+P 2350 2000
+F 0 "#PWR02" H 2350 1750 50  0001 C CNN
+F 1 "GND" H 2355 1827 50  0000 C CNN
+F 2 "" H 2350 2000 50  0001 C CNN
+F 3 "" H 2350 2000 50  0001 C CNN
+	1    2350 2000
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	2150 2000 2350 2000
+Connection ~ 2150 2000
+Wire Wire Line
+	4000 3750 1950 3750
+Wire Wire Line
+	1950 3750 1950 2300
+Connection ~ 1950 2300
+$Comp
+L power:GND #PWR05
+U 1 1 60F3C16F
+P 6900 5800
+F 0 "#PWR05" H 6900 5550 50  0001 C CNN
+F 1 "GND" H 6905 5627 50  0000 C CNN
+F 2 "" H 6900 5800 50  0001 C CNN
+F 3 "" H 6900 5800 50  0001 C CNN
+	1    6900 5800
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	6800 3950 6900 3950
+Wire Wire Line
+	6900 3950 6900 4500
+Wire Wire Line
+	6900 4800 6900 5150
+Wire Wire Line
+	6900 5450 6900 5800
+$Comp
+L power:VBUS #PWR?
+U 1 1 60F3F9A0
+P 4450 1050
+F 0 "#PWR?" H 4450 900 50  0001 C CNN
+F 1 "VBUS" H 4465 1223 50  0000 C CNN
+F 2 "" H 4450 1050 50  0001 C CNN
+F 3 "" H 4450 1050 50  0001 C CNN
+	1    4450 1050
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	4450 1250 4450 1050
+Connection ~ 4450 1250
+Wire Wire Line
+	3450 2950 5250 2950
+$Comp
+L power:+3.3V #PWR?
+U 1 1 60F41144
+P 6250 1000
+F 0 "#PWR?" H 6250 850 50  0001 C CNN
+F 1 "+3.3V" H 6265 1173 50  0000 C CNN
+F 2 "" H 6250 1000 50  0001 C CNN
+F 3 "" H 6250 1000 50  0001 C CNN
+	1    6250 1000
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:+3.3V #PWR?
+U 1 1 60F41B17
+P 3450 2750
+F 0 "#PWR?" H 3450 2600 50  0001 C CNN
+F 1 "+3.3V" H 3465 2923 50  0000 C CNN
+F 2 "" H 3450 2750 50  0001 C CNN
+F 3 "" H 3450 2750 50  0001 C CNN
+	1    3450 2750
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	3450 2950 3450 2750
+Connection ~ 3450 2950
+Wire Wire Line
+	6250 1000 6250 1250
+$EndSCHEMATC
