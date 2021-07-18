@@ -41,7 +41,7 @@ void initSBus(void) {
     TX1STAbits.BRGH = 1;
     BAUD1CONbits.BRG16 = 1;
     SP1BRGH = 0;
-    SP1BRGL = 9; //100000 baud at Fosc = 4 MHz
+    SP1BRGL = 79; //100000 baud at Fosc = 32 MHz
     TX1STAbits.SYNC = 0;
     //BAUD1CONbits.SCKP = 1; //invert polarity
     RC1STAbits.SPEN = 1;

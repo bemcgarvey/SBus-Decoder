@@ -18,9 +18,9 @@ volatile uint8_t tickCount = 0;
 void initTimer2(void) {
     T2CONbits.TMR2ON = 0;
     T2CONbits.T2OUTPS = 0b1001; //1:10 post-scale
-    T2CONbits.T2CKPS = 0b00; //1:1 pre-scale
+    T2CONbits.T2CKPS = 0b01; //1:4 pre-scale
     TMR2 = 0;
-    PR2 = 100;
+    PR2 = 200;
     PIR1bits.TMR2IF = 0;
     PIE1bits.TMR2IE = 1;
 }

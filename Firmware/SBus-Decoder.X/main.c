@@ -15,15 +15,13 @@
 #include "led.h"
 #include "timers.h"
 
-#define _XTAL_FREQ   4000000U
+#define _XTAL_FREQ   32000000U
 
 void configPins(void);
 void configInterrupts(void);
 void configPMD(void);
 
 void main(void) {
-    OSCCON1bits.NDIV = 0;
-    OSCFRQ = 3;
     OSCTUNE = 0;
     configPins();
     configPMD();
