@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////
-// Project: RX12                                   //
+// Project: SBus-Decoder                           //
 // File: main.c                                    //
 // Target: PIC16F18313                             // 
 // Compiler: XC8                                   //
@@ -11,6 +11,9 @@
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "sbus.h"
+#include "led.h"
+#include "timers.h"
 
 #define _XTAL_FREQ   4000000U
 
@@ -25,18 +28,25 @@ void main(void) {
     configPins();
     configPMD();
     configInterrupts();
+    initTimer2();
+    startTimer2();
+    initSBus();
     while (1) {
-        LATAbits.LATA2 = 1;
-        __delay_ms(1000);
-        LATAbits.LATA2 = 0;
-        __delay_ms(1000);
+        if (throttle > 1024) {
+            ledOn();
+        } else {
+            ledOff();
+        }
     }
 }
 
 void configPins(void) {
     ANSELA = 0;
     LATA = 0b00000000;
-    TRISA = 0b00000000;
+    TRISA = 0b00101000;
+    RXPPS = 0b00101; //RA5
+    CLCIN0PPS = 0b00011; //RA3
+    RA4PPS = 0b00100; //CLC1OUT        
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
     PPSLOCKbits.PPSLOCKED = 1;
@@ -59,5 +69,11 @@ void configPMD(void) {
 }
 
 void __interrupt() isr(void) {
-
+    while (PIR1bits.RCIF == 1) {
+        processRxByte();
+    }
+    if (PIR1bits.TMR2IF == 1) {
+        handleTimer2Int();
+        PIR1bits.TMR2IF = 0;
+    }
 }

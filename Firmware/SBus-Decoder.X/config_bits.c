@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////
-// Project: RX12                                   //
+// Project: SBus-Decoder                           //
 // File: config_bits.c                             //
 // Target: PIC16F18313                             // 
 // Compiler: XC8                                   //
