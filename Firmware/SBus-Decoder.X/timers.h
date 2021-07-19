@@ -12,10 +12,11 @@
 #define	TIMERS_H
 
 extern volatile uint8_t tickCount;
+extern volatile uint8_t startNewFrame;
 
 void initTimer1(void);
 void startTimer1(void);
-void handleTimer1Int(void);
+void stopTimer1(void);
 void initTimer2(void);
 void startTimer2(void);
 void handleTimer2Int(void);

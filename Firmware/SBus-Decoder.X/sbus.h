@@ -33,6 +33,7 @@ extern volatile uint16_t throttle;
 
 void initSBus(void);
 void processRxByte(void);
+uint16_t extractChannel(uint8_t channel);
 
 
 #endif	/* SBUS_H */

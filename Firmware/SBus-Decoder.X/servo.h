@@ -11,7 +11,12 @@
 #ifndef SERVO_H
 #define	SERVO_H
 
+extern volatile uint16_t match;
 
+void initServos(void);
+void handleCCP1Int(void);
+void handleCCP2Int(void);
+void startFrame(void);
 
 #endif	/* SERVO_H */
 

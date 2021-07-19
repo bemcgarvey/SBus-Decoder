@@ -43,7 +43,6 @@ void initSBus(void) {
     SP1BRGH = 0;
     SP1BRGL = 79; //100000 baud at Fosc = 32 MHz
     TX1STAbits.SYNC = 0;
-    //BAUD1CONbits.SCKP = 1; //invert polarity
     RC1STAbits.SPEN = 1;
     RC1STAbits.RX9 = 1; //9 bit rx for parity
     PIE1bits.RCIE = 1;
@@ -63,9 +62,11 @@ void processRxByte(void) {
     } else {
         parity = RC1STAbits.RX9D;
         byte = RC1REG;
+        //TODO check parity?
         if (receivingPacket) {
             if (currentByte == sizeof (rxPacket)) {
                 receivingPacket = 0;
+                //TODO move this processing to main
                 throttle = ((uint16_t)rxPacket.channels[2]  >> 6 | (uint16_t)rxPacket.channels[3]  << 2  |
               (uint16_t)rxPacket.channels[4] << 10) & 0x07ff;
             } else {
@@ -80,4 +81,8 @@ void processRxByte(void) {
         }
     }
     tickCount = 0;
+}
+
+uint16_t extractChannel(uint8_t channel) {
+    return 0;
 }

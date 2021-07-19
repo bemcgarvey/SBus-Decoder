@@ -12,8 +12,32 @@
 #include <stdint.h>
 #include "timers.h"
 #include "led.h"
+#include "servo.h"
 
 volatile uint8_t tickCount = 0;
+volatile uint8_t frameTickCount = 0;
+volatile uint8_t startNewFrame = 0;
+
+void initTimer1(void) {
+    T1CONbits.TMR1ON = 0;
+    T1CONbits.TMR1CS = 0b00; // Fosc / 4
+    T1CONbits.T1CKPS = 0b00; // 1:1 pre-scale
+    T1GCONbits.TMR1GE = 0; //Gate disabled
+    TMR1H = 0;
+    TMR1L = 0;
+}
+
+//TODO make this a #define or just put code inline
+void startTimer1(void) {
+    TMR1H = 0;
+    TMR1L = 0;
+    T1CONbits.TMR1ON = 1;
+}
+
+//TODO make this a #define or just put code inline
+void stopTimer1(void) {
+    T1CONbits.TMR1ON = 0;
+}
 
 void initTimer2(void) {
     T2CONbits.TMR2ON = 0;
@@ -31,8 +55,11 @@ void startTimer2(void) {
 
 void handleTimer2Int(void) {
     ++tickCount;
-//    if (tickCount == 250) {
-//        tickCount = 0;
-//        ledToggle();
-//    }
+    ++frameTickCount;
+    //TODO check frame rate
+    if (frameTickCount == 22) {
+        frameTickCount = 0;
+        startNewFrame = 1;
+    }
 }
+
