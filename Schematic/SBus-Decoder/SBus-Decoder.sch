@@ -19,21 +19,10 @@ U 1 1 60EFBC4A
 P 4000 3650
 F 0 "U1" H 5400 4037 60  0000 C CNN
 F 1 "PIC16F18313-I_SN" H 5400 3931 60  0000 C CNN
-F 2 "SOIC8_SN_MCH" H 5400 3890 60  0001 C CNN
+F 2 "PIC16F18313:PIC16F18313-I&slash_SN" H 5400 3890 60  0001 C CNN
 F 3 "" H 4000 3650 60  0000 C CNN
 	1    4000 3650
 	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:Conn_01x03_Male J4
-U 1 1 60F0F917
-P 8250 3600
-F 0 "J4" H 8358 3881 50  0000 C CNN
-F 1 "Conn_01x03_Male" H 8358 3790 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 8250 3600 50  0001 C CNN
-F 3 "~" H 8250 3600 50  0001 C CNN
-	1    8250 3600
-	-1   0    0    -1  
 $EndComp
 $Comp
 L Device:C C1
@@ -71,45 +60,12 @@ $EndComp
 $Comp
 L power:GND #PWR010
 U 1 1 60F15387
-P 7950 4850
-F 0 "#PWR010" H 7950 4600 50  0001 C CNN
-F 1 "GND" H 7955 4677 50  0000 C CNN
-F 2 "" H 7950 4850 50  0001 C CNN
-F 3 "" H 7950 4850 50  0001 C CNN
-	1    7950 4850
-	1    0    0    -1  
-$EndComp
-$Comp
-L Connector:Conn_01x03_Male J2
-U 1 1 60F26177
-P 2050 1700
-F 0 "J2" V 2050 1900 50  0000 C CNN
-F 1 "Conn_01x03_Male" H 2158 1890 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 2050 1700 50  0001 C CNN
-F 3 "~" H 2050 1700 50  0001 C CNN
-	1    2050 1700
-	0    -1   1    0   
-$EndComp
-$Comp
-L Connector:Conn_01x03_Male J5
-U 1 1 60F264CF
-P 8250 4450
-F 0 "J5" H 8358 4731 50  0000 C CNN
-F 1 "Conn_01x03_Male" H 8358 4640 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 8250 4450 50  0001 C CNN
-F 3 "~" H 8250 4450 50  0001 C CNN
-	1    8250 4450
-	-1   0    0    -1  
-$EndComp
-$Comp
-L Regulator_Linear:MCP1703A-3302_SOT223 U2
-U 1 1 60F273AB
-P 5200 1250
-F 0 "U2" H 5200 1492 50  0000 C CNN
-F 1 "MCP1703A-3302_SOT223" H 5200 1401 50  0000 C CNN
-F 2 "Package_TO_SOT_SMD:SOT-223-3_TabPin2" H 5200 1450 50  0001 C CNN
-F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005122B.pdf" H 5200 1200 50  0001 C CNN
-	1    5200 1250
+P 7900 4200
+F 0 "#PWR010" H 7900 3950 50  0001 C CNN
+F 1 "GND" H 7905 4027 50  0000 C CNN
+F 2 "" H 7900 4200 50  0001 C CNN
+F 3 "" H 7900 4200 50  0001 C CNN
+	1    7900 4200
 	1    0    0    -1  
 $EndComp
 $Comp
@@ -151,16 +107,16 @@ U 1 1 60F0F0EB
 P 1300 1700
 F 0 "J1" V 1300 1900 50  0000 C CNN
 F 1 "Conn_01x03_Male" H 1408 1890 50  0001 C CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Horizontal" H 1300 1700 50  0001 C CNN
+F 2 "Connector_Wire:SolderWire-0.75sqmm_1x03_P4.8mm_D1.25mm_OD2.3mm" H 1300 1700 50  0001 C CNN
 F 3 "~" H 1300 1700 50  0001 C CNN
 	1    1300 1700
 	0    -1   1    0   
 $EndComp
 Text Notes 1450 1550 0    50   ~ 0
 SBUS In/Out
-Text Notes 8500 3600 0    50   ~ 0
+Text Notes 7200 3900 0    50   ~ 0
 Servo 1
-Text Notes 8500 4450 0    50   ~ 0
+Text Notes 8550 3900 0    50   ~ 0
 Servo 2
 Text Notes 3350 4900 0    50   ~ 0
 ICSP \nVdd
@@ -216,46 +172,18 @@ Wire Wire Line
 Wire Wire Line
 	5950 1750 5200 1750
 Wire Wire Line
-	6800 3750 7050 3750
-Wire Wire Line
-	7050 3750 7050 3500
-Wire Wire Line
-	7050 3500 8050 3500
-Wire Wire Line
 	6800 3850 7100 3850
-Wire Wire Line
-	7100 3850 7100 4350
-Wire Wire Line
-	7100 4350 8050 4350
-Wire Wire Line
-	8050 4450 7850 4450
-Wire Wire Line
-	7850 4450 7850 3600
-Wire Wire Line
-	7850 3600 8050 3600
-Wire Wire Line
-	8050 3700 7950 3700
-Wire Wire Line
-	7950 3700 7950 4550
-Wire Wire Line
-	8050 4550 7950 4550
-Connection ~ 7950 4550
-Wire Wire Line
-	7950 4550 7950 4850
 $Comp
 L power:VBUS #PWR09
 U 1 1 60F32EF0
-P 7850 3250
-F 0 "#PWR09" H 7850 3100 50  0001 C CNN
-F 1 "VBUS" H 7865 3423 50  0000 C CNN
-F 2 "" H 7850 3250 50  0001 C CNN
-F 3 "" H 7850 3250 50  0001 C CNN
-	1    7850 3250
+P 7850 3300
+F 0 "#PWR09" H 7850 3150 50  0001 C CNN
+F 1 "VBUS" H 7865 3473 50  0000 C CNN
+F 2 "" H 7850 3300 50  0001 C CNN
+F 3 "" H 7850 3300 50  0001 C CNN
+	1    7850 3300
 	1    0    0    -1  
 $EndComp
-Wire Wire Line
-	7850 3600 7850 3250
-Connection ~ 7850 3600
 $Comp
 L power:VBUS #PWR01
 U 1 1 60F33FE8
@@ -272,37 +200,9 @@ Wire Wire Line
 Wire Wire Line
 	1300 2100 1300 1900
 Wire Wire Line
-	2050 1900 2050 2100
-Wire Wire Line
-	2050 2100 1300 2100
-Connection ~ 1300 2100
-Wire Wire Line
 	1200 1900 1200 2300
 Wire Wire Line
 	1200 2300 1950 2300
-Wire Wire Line
-	1950 2300 1950 1900
-Wire Wire Line
-	1400 1900 1400 2000
-Wire Wire Line
-	1400 2000 2150 2000
-Wire Wire Line
-	2150 2000 2150 1900
-$Comp
-L power:GND #PWR02
-U 1 1 60F37DA9
-P 2350 2000
-F 0 "#PWR02" H 2350 1750 50  0001 C CNN
-F 1 "GND" H 2355 1827 50  0000 C CNN
-F 2 "" H 2350 2000 50  0001 C CNN
-F 3 "" H 2350 2000 50  0001 C CNN
-	1    2350 2000
-	1    0    0    -1  
-$EndComp
-Wire Wire Line
-	2150 2000 2350 2000
-Connection ~ 2150 2000
-Connection ~ 1950 2300
 $Comp
 L power:GND #PWR08
 U 1 1 60F3C16F
@@ -376,14 +276,89 @@ Wire Wire Line
 Wire Wire Line
 	1950 3950 4000 3950
 $Comp
-L Connector:Conn_01x01_Male J3
+L Connector:Conn_01x01_Male J2
 U 1 1 60F2444D
 P 3450 4650
-F 0 "J3" V 3558 4562 50  0000 R CNN
+F 0 "J2" V 3558 4562 50  0000 R CNN
 F 1 "Conn_01x01_Male" V 3513 4562 50  0001 R CNN
 F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 3450 4650 50  0001 C CNN
 F 3 "~" H 3450 4650 50  0001 C CNN
 	1    3450 4650
 	0    -1   -1   0   
+$EndComp
+$Comp
+L Regulator_Linear:MCP1703A-3302_SOT23 U2
+U 1 1 60F50A9F
+P 5200 1250
+F 0 "U2" H 5200 1492 50  0000 C CNN
+F 1 "MCP1703A-3302_SOT23" H 5200 1401 50  0000 C CNN
+F 2 "Package_TO_SOT_SMD:SOT-23" H 5200 1450 50  0001 C CNN
+F 3 "http://ww1.microchip.com/downloads/en/DeviceDoc/20005122B.pdf" H 5200 1200 50  0001 C CNN
+	1    5200 1250
+	1    0    0    -1  
+$EndComp
+$Comp
+L power:GND #PWR02
+U 1 1 60F5D84A
+P 1650 2100
+F 0 "#PWR02" H 1650 1850 50  0001 C CNN
+F 1 "GND" H 1650 1950 50  0000 C CNN
+F 2 "" H 1650 2100 50  0001 C CNN
+F 3 "" H 1650 2100 50  0001 C CNN
+	1    1650 2100
+	1    0    0    -1  
+$EndComp
+Wire Wire Line
+	1400 2100 1650 2100
+Wire Wire Line
+	1400 1900 1400 2100
+Wire Wire Line
+	8150 3950 8250 3950
+Wire Wire Line
+	8250 3950 8250 4150
+Wire Wire Line
+	8250 4150 7900 4150
+Wire Wire Line
+	7900 4150 7900 4200
+Wire Wire Line
+	7650 3950 7500 3950
+Wire Wire Line
+	7500 3950 7500 4150
+Connection ~ 7900 4150
+Wire Wire Line
+	7100 4450 8450 4450
+Wire Wire Line
+	8450 3750 8150 3750
+Wire Wire Line
+	7500 4150 7900 4150
+Wire Wire Line
+	8450 3750 8450 4450
+Wire Wire Line
+	8150 3850 8250 3850
+Wire Wire Line
+	8250 3850 8250 3300
+Wire Wire Line
+	8250 3300 7850 3300
+Wire Wire Line
+	7650 3850 7550 3850
+Wire Wire Line
+	7550 3850 7550 3300
+Wire Wire Line
+	7550 3300 7850 3300
+Connection ~ 7850 3300
+Wire Wire Line
+	7100 3850 7100 4450
+Wire Wire Line
+	6800 3750 7650 3750
+$Comp
+L Connector_Generic:Conn_02x03_Odd_Even J3
+U 1 1 60F76AF8
+P 7850 3850
+F 0 "J3" H 7900 4075 50  0000 C CNN
+F 1 "Conn_02x03_Odd_Even" H 7900 4076 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_2x03_P2.54mm_Horizontal" H 7850 3850 50  0001 C CNN
+F 3 "~" H 7850 3850 50  0001 C CNN
+	1    7850 3850
+	1    0    0    -1  
 $EndComp
 $EndSCHEMATC
