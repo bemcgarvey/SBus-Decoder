@@ -62,7 +62,7 @@ L Device:C C3
 U 1 1 60F28E0E
 P 5950 1500
 F 0 "C3" H 6065 1546 50  0000 L CNN
-F 1 "1 uF" H 6065 1455 50  0000 L CNN
+F 1 "2.2 uF" H 6065 1455 50  0000 L CNN
 F 2 "Capacitor_SMD:C_0603_1608Metric" H 5988 1350 50  0001 C CNN
 F 3 "~" H 5950 1500 50  0001 C CNN
 	1    5950 1500
@@ -92,8 +92,8 @@ F 3 "" H 6150 3050 50  0001 C CNN
 $EndComp
 Text Notes 1800 4250 0    50   ~ 0
 SBUS In
-Text Notes 2850 3150 0    50   ~ 0
-ICSP \nVdd
+Text Notes 2550 3000 0    50   ~ 0
+ICSP \nMCLR/Vdd
 Wire Wire Line
 	5550 2950 6150 2950
 Wire Wire Line
@@ -218,17 +218,6 @@ Wire Wire Line
 Wire Wire Line
 	6250 1000 6250 1250
 $Comp
-L Connector:Conn_01x01_Male J2
-U 1 1 60F2444D
-P 2950 3200
-F 0 "J2" V 3058 3112 50  0000 R CNN
-F 1 "Conn_01x01_Male" V 3013 3112 50  0001 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 2950 3200 50  0001 C CNN
-F 3 "~" H 2950 3200 50  0001 C CNN
-	1    2950 3200
-	0    1    1    0   
-$EndComp
-$Comp
 L Regulator_Linear:MCP1703A-3302_SOT23 U2
 U 1 1 60F50A9F
 P 5200 1250
@@ -262,19 +251,6 @@ F 3 "" H 3550 3650 60  0000 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L Connector:Conn_01x01_Male J3
-U 1 1 60F6C0D6
-P 2650 3200
-F 0 "J3" V 2758 3112 50  0000 R CNN
-F 1 "Conn_01x01_Male" V 2713 3112 50  0001 R CNN
-F 2 "Connector_PinHeader_2.54mm:PinHeader_1x01_P2.54mm_Vertical" H 2650 3200 50  0001 C CNN
-F 3 "~" H 2650 3200 50  0001 C CNN
-	1    2650 3200
-	0    1    1    0   
-$EndComp
-Text Notes 2550 3150 0    50   ~ 0
-ICSP\nMLCR
-$Comp
 L Connector:Conn_01x03_Male J1
 U 1 1 60F0F0EB
 P 1950 4600
@@ -286,10 +262,10 @@ F 3 "~" H 1950 4600 50  0001 C CNN
 	1    0    0    -1  
 $EndComp
 $Comp
-L SamacSys_Parts:TSW-104-08-G-T-RA J4
+L SamacSys_Parts:TSW-104-08-G-T-RA J3
 U 1 1 60F70215
 P 8100 3550
-F 0 "J4" H 8550 3723 50  0000 C CNN
+F 0 "J3" H 8550 3723 50  0000 C CNN
 F 1 "TSW-104-08-G-T-RA" H 8550 3724 50  0001 C CNN
 F 2 "HDRRA12W64P254_3X4_1016X254X810P" H 8850 3650 50  0001 L CNN
 F 3 "http://suddendocs.samtec.com/catalog_english/tsw_th.pdf" H 8850 3550 50  0001 L CNN
@@ -311,8 +287,6 @@ Wire Wire Line
 Wire Wire Line
 	3450 3650 3450 3400
 Connection ~ 3450 2950
-Wire Wire Line
-	2950 3400 3450 3400
 Connection ~ 3450 3400
 Wire Wire Line
 	3450 3400 3450 2950
@@ -407,8 +381,6 @@ Connection ~ 9050 3550
 Text Notes 8350 4350 0    50   ~ 0
 Servos 1-4
 Wire Wire Line
-	2650 3400 2650 3950
-Wire Wire Line
 	2650 3950 3550 3950
 Wire Wire Line
 	2150 4500 2900 4500
@@ -416,4 +388,21 @@ Wire Wire Line
 	2900 4500 2900 4250
 Wire Wire Line
 	2900 4250 3550 4250
+$Comp
+L Connector:Conn_01x02_Male J2
+U 1 1 60F7C777
+P 2650 3100
+F 0 "J2" V 2700 3250 50  0000 R CNN
+F 1 "Conn_01x02_Male" V 2803 2912 50  0001 R CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x02_P2.54mm_Vertical" H 2650 3100 50  0001 C CNN
+F 3 "~" H 2650 3100 50  0001 C CNN
+	1    2650 3100
+	0    -1   1    0   
+$EndComp
+Wire Wire Line
+	2650 3300 2650 3950
+Wire Wire Line
+	2750 3400 2750 3300
+Wire Wire Line
+	2750 3400 3450 3400
 $EndSCHEMATC
