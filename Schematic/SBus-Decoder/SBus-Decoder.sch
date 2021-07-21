@@ -280,7 +280,7 @@ U 1 1 60F0F0EB
 P 1950 4600
 F 0 "J1" V 1950 4800 50  0000 C CNN
 F 1 "Conn_01x03_Male" H 2058 4790 50  0001 C CNN
-F 2 "Connector_Wire:SolderWire-0.5sqmm_1x03_P4.6mm_D0.9mm_OD2.1mm" H 1950 4600 50  0001 C CNN
+F 2 "Connector_PinHeader_2.54mm:PinHeader_1x03_P2.54mm_Vertical" H 1950 4600 50  0001 C CNN
 F 3 "~" H 1950 4600 50  0001 C CNN
 	1    1950 4600
 	1    0    0    -1  
