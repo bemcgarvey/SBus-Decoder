@@ -1,3 +1,4 @@
 (sym_lib_table
   (lib (name PIC16F18313)(type Legacy)(uri C:/Microchip-KiCad/ul_PIC16F18313ISN/KiCAD/2021-07-15_04-03-12/2021-07-15_04-03-12.lib)(options "")(descr ""))
+  (lib (name PIC18F0xQ40)(type Legacy)(uri C:/Microchip-KiCad/ul_PIC18F04Q40IST/KiCAD/2021-07-19_21-43-43/2021-07-19_21-43-43.lib)(options "")(descr ""))
 )
