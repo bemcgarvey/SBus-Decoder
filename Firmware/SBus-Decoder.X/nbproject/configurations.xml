@@ -37,16 +37,16 @@
     <conf name="default" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC16F18313</targetDevice>
+        <targetDevice>PIC18F05Q40</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>pk4hybrid</platformTool>
+        <platformTool>noID</platformTool>
         <languageToolchain>XC8</languageToolchain>
         <languageToolchainVersion>2.31</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC16F1xxxx_DFP" vendor="Microchip" version="1.6.143"/>
+        <pack name="PIC18F-Q_DFP" vendor="Microchip" version="1.8.154"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>

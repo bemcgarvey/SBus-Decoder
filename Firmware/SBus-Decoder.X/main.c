@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////
 // Project: SBus-Decoder                           //
 // File: main.c                                    //
-// Target: PIC16F18313                             // 
+// Target: PIC18F0xQ40                             // 
 // Compiler: XC8                                   //
 // Author: Brad McGarvey                           //
 // License: GNU General Public License v3.0        //
@@ -16,7 +16,7 @@
 #include "timers.h"
 #include "servo.h"
 
-#define _XTAL_FREQ   32000000U
+#define _XTAL_FREQ   64000000U
 
 void configPins(void);
 void configInterrupts(void);
@@ -28,21 +28,9 @@ void main(void) {
     configPMD();
     configInterrupts();
     initServos();
-    initTimer1();
-    initTimer2();
-    startTimer2();
     initSBus();
     while (1) {
-        if (startNewFrame) {
-            startNewFrame = 0;
-            startFrame();
-        }
-        //TODO if tickCount gets too big go to failsafe
-        if (throttle >= 1024) {
-            ledOn();
-        } else {
-            ledOff();
-        }
+        
     }
 }
 
@@ -50,19 +38,28 @@ void configPins(void) {
     ANSELA = 0;
     LATA = 0b00000000;
     TRISA = 0b00101000;
-    RXPPS = 0b00101; //RA5
-    CLCIN0PPS = 0b00011; //RA3
-    RA4PPS = 0b00100; //CLC1OUT
-    RA0PPS = 0b01100; //CCP1
-    RA1PPS = 0b01101; //CCP2
+    ANSELC = 0;
+    LATC = 0;
+    TRISC = 0;
+    
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
     PPSLOCKbits.PPSLOCKED = 1;
 }
 
 void configInterrupts(void) {
-    INTCONbits.PEIE = 1;
-    INTCONbits.GIE = 1;
+    INTCON0bits.IPEN = 1;
+    IVTLOCK = 0x55;
+    IVTLOCK = 0xAA;
+    IVTLOCKbits.IVTLOCKED = 0; // unlock IVT
+    IVTBASEU = 0;
+    IVTBASEH = 0;
+    IVTBASEL = 8;
+    IVTLOCK = 0x55;
+    IVTLOCK = 0xAA;
+    IVTLOCKbits.IVTLOCKED = 1; // lock IVT
+    INTCON0bits.GIEH = 1;
+    INTCON0bits.GIEL = 1;
 }
 
 void configPMD(void) {
@@ -74,23 +71,4 @@ void configPMD(void) {
     PMD4 = 0b00100010;
     PMD5 = 0b00000111;
      */
-}
-
-void __interrupt() isr(void) {
-    while (PIR1bits.RCIF == 1) {
-        processRxByte();
-    }
-    if (PIR1bits.TMR2IF == 1) {
-        handleTimer2Int();
-        PIR1bits.TMR2IF = 0;
-    }
-    if (PIR4bits.CCP1IF == 1) {
-        if (CCP1CONbits.CCP1OUT == 1) {
-            CCPR1H = (uint8_t)(match >> 8);
-            CCPR1L = (uint8_t) match;
-        } else {
-            stopTimer1();
-        }
-        PIR4bits.CCP1IF = 0;
-    }
 }

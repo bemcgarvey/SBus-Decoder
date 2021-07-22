@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////
 // Project: SBus-Decoder                           //
 // File: timers.h                                  //
-// Target: PIC16F18313                             // 
+// Target: PIC18F0xQ40                             // 
 // Compiler: XC8                                   //
 // Author: Brad McGarvey                           //
 // License: GNU General Public License v3.0        //
@@ -10,16 +10,6 @@
 
 #ifndef TIMERS_H
 #define	TIMERS_H
-
-extern volatile uint8_t tickCount;
-extern volatile uint8_t startNewFrame;
-
-void initTimer1(void);
-void startTimer1(void);
-void stopTimer1(void);
-void initTimer2(void);
-void startTimer2(void);
-void handleTimer2Int(void);
 
 #endif	/* TIMERS_H */
 

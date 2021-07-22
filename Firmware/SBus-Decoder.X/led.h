@@ -1,16 +1,19 @@
-/* 
- * File:   led.h
- * Author: bemcg
- *
- * Created on July 16, 2021, 11:11 PM
- */
+/////////////////////////////////////////////////////
+// Project: SBus-Decoder                           //
+// File: led.h                                     //
+// Target: PIC18F0xQ40                             // 
+// Compiler: XC8                                   //
+// Author: Brad McGarvey                           //
+// License: GNU General Public License v3.0        //
+// Description: LED control macros                 //
+/////////////////////////////////////////////////////
 
 #ifndef LED_H
 #define	LED_H
 
-#define ledOn() {LATAbits.LATA2 = 1;}
-#define ledOff() {LATAbits.LATA2 = 0;}
-#define ledToggle() {LATAbits.LATA2 ^= 1;}
+#define ledOn() {LATCbits.LATC2 = 1;}
+#define ledOff() {LATCbits.LATC2 = 0;}
+#define ledToggle() {LATCbits.LATC2 ^= 1;}
 
 #endif	/* LED_H */
 

@@ -1,7 +1,7 @@
 /////////////////////////////////////////////////////
 // Project: SBus-Decoder                           //
 // File: sbus.h                                    //
-// Target: PIC16F18313                             // 
+// Target: PIC18F0xQ40                             // 
 // Compiler: XC8                                   //
 // Author: Brad McGarvey                           //
 // License: GNU General Public License v3.0        //
@@ -28,11 +28,8 @@ typedef union {
 } SBusPacket;
 
 extern volatile SBusPacket rxPacket;
-extern volatile char packetUpdate;
-extern volatile uint16_t throttle;
 
 void initSBus(void);
-void processRxByte(void);
 uint16_t extractChannel(uint8_t channel);
 
 
