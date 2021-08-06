@@ -30,17 +30,18 @@ void main(void) {
     initServos();
     initSBus();
     while (1) {
-        
+        ledToggle();
+        __delay_ms(1000);
     }
 }
 
 void configPins(void) {
     ANSELA = 0;
-    LATA = 0b00000000;
-    TRISA = 0b00101000;
+    LATA = 0;
+    TRISA = 0;
     ANSELC = 0;
     LATC = 0;
-    TRISC = 0;
+    TRISC = 0b00001000;
     
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
