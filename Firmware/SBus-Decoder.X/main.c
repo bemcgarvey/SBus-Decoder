@@ -46,9 +46,17 @@ void main(void) {
     configInterrupts();
     initServos();
     initSBus();
+    initTimer2();
+    int ledTicks = 0;
     while (1) {
-        ledToggle();
-        __delay_ms(1000);
+        if (sBusRxTicks >= 100) {
+            sBusRxTicks = 0;
+            ++ledTicks;
+            if (ledTicks == 10) {
+                ledToggle();
+                ledTicks = 0;
+            }
+        } 
     }
 }
 

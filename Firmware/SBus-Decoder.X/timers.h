@@ -13,7 +13,9 @@
 
 #define _XTAL_FREQ   64000000U
 
+extern volatile uint8_t sBusRxTicks;
 
+void initTimer2(void);
 
 #endif	/* TIMERS_H */
 
