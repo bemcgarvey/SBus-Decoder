@@ -22,19 +22,19 @@ void initSerial(void) {
     TRISCbits.TRISC0 = 0; //TX
     LATAbits.LATA1 = 0; //Set to 0 for gnd
     TRISAbits.TRISA1 = 0; //Gnd
-    U1RXPPS = 0b00000; //RA0
-    RC0PPS = 0x10;     //UART1TX
-    U1CON1bits.ON = 0;
-    U1CON0bits.BRGS = 1;
-    U1CON0bits.TXEN = 1;
-    U1CON0bits.RXEN = 1;
-    U1CON0bits.MODE = 0; //8 bit no parity
-    U1BRG = 138;  //115200 baud
+    U2RXPPS = 0b00000; //RA0
+    RC0PPS = 0x13;     //UART2TX
+    U2CON1bits.ON = 0;
+    U2CON0bits.BRGS = 1;
+    U2CON0bits.TXEN = 1;
+    U2CON0bits.RXEN = 1;
+    U2CON0bits.MODE = 0; //8 bit no parity
+    U2BRG = 138;  //115200 baud
     
-    U1CON1bits.ON = 1;
+    U2CON1bits.ON = 1;
 }
 
 void putch(char c) {
-    while (!PIR4bits.U1TXIF);
-    U1TXB = c;
+    while (!PIR8bits.U2TXIF);
+    U2TXB = c;
 }

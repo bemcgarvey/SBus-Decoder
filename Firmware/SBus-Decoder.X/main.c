@@ -31,10 +31,13 @@ void main(void) {
         initSerial();
         printf("Serial detected\r\n");
         while (1) {
-            while (!PIR4bits.U1RXIF);
-            char c = U1RXB;
+            while (!PIR8bits.U2RXIF);
+            char c = U2RXB;
             if (c == 't') {
                 ledToggle();
+            }
+            if (c == 'd') {
+                printf("debug mode\r\n");
             }
         }
     }
@@ -44,7 +47,7 @@ void main(void) {
     initServos();
     initSBus();
     while (1) {
-        //ledToggle();
+        ledToggle();
         __delay_ms(1000);
     }
 }
@@ -56,7 +59,14 @@ void configPins(void) {
     ANSELC = 0;
     LATC = 0;
     TRISC = 0b00001000;
-    
+    PPSLOCK = 0x55;
+    PPSLOCK = 0xaa;
+    PPSLOCKbits.PPSLOCKED = 0;
+    U1RXPPS = 0b010011;  //RC3
+    RA0PPS = 0x0a;  //PWM1S1P1_OUT
+    RA1PPS = 0x0b;  //PWM1S1P2_OUT
+    RC0PPS = 0x0c;  //PWM2S1P1_OUT
+    RC1PPS = 0x0d;  //PWM2S1P2_OUT
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
     PPSLOCKbits.PPSLOCKED = 1;
