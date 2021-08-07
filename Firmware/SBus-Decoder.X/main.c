@@ -11,26 +11,40 @@
 #include <xc.h>
 #include <stdbool.h>
 #include <stdint.h>
+#include "serial.h"
 #include "sbus.h"
 #include "led.h"
 #include "timers.h"
 #include "servo.h"
 
-#define _XTAL_FREQ   64000000U
+#include <stdio.h>
 
 void configPins(void);
 void configInterrupts(void);
 void configPMD(void);
 
-void main(void) {
+void main(void) {   
     OSCTUNE = 0;
+    initLED();
+    if (detectSerial()) {
+        ledOn();
+        initSerial();
+        printf("Serial detected\r\n");
+        while (1) {
+            while (!PIR4bits.U1RXIF);
+            char c = U1RXB;
+            if (c == 't') {
+                ledToggle();
+            }
+        }
+    }
     configPins();
     configPMD();
     configInterrupts();
     initServos();
     initSBus();
     while (1) {
-        ledToggle();
+        //ledToggle();
         __delay_ms(1000);
     }
 }

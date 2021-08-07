@@ -11,6 +11,7 @@
 #ifndef LED_H
 #define	LED_H
 
+#define initLED() {TRISC &= 0b11111011; LATCbits.LATC2 = 0;}
 #define ledOn() {LATCbits.LATC2 = 1;}
 #define ledOff() {LATCbits.LATC2 = 0;}
 #define ledToggle() {LATCbits.LATC2 ^= 1;}

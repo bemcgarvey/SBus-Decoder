@@ -8,6 +8,7 @@
       <itemPath>servo.h</itemPath>
       <itemPath>led.h</itemPath>
       <itemPath>timers.h</itemPath>
+      <itemPath>serial.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -21,6 +22,7 @@
       <itemPath>sbus.c</itemPath>
       <itemPath>servo.c</itemPath>
       <itemPath>timers.c</itemPath>
+      <itemPath>serial.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
