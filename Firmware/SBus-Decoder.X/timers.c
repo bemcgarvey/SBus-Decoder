@@ -22,9 +22,8 @@ void initTimer2(void) {
     T2PR = 100;
     T2HLTbits.PSYNC = 1;
     T2HLTbits.CKSYNC = 1;
-    T2HLTbits.MODE = 0b011; //HLT Reset on any edge
+    T2HLTbits.MODE = 0; //Free running, software gate
     T2CLKCON = 0b0001; //Fosc/4
-    T2RST = 0b10010;  //UART1RX
     PIR3bits.TMR2IF = 0;
     IPR3bits.TMR2IP = 1;
     PIE3bits.TMR2IE = 1;

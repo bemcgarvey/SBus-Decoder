@@ -1,10 +1,18 @@
+/////////////////////////////////////////////////////
+// Project: SBus-Decoder                           //
+// File: serial.c                                  //
+// Target: PIC18F0xQ40                             // 
+// Compiler: XC8                                   //
+// Author: Brad McGarvey                           //
+// License: GNU General Public License v3.0        //
+// Description: serial functions (non-sBus)        //
+/////////////////////////////////////////////////////
+
 #include <xc.h>
 #include "serial.h"
 #include "timers.h"
 
 bool detectSerial(void) {
-    ANSELC = 0;
-    ANSELA = 0;
     WPUCbits.WPUC1 = 1;
     TRISCbits.TRISC1 = 1;
     __delay_ms(1);
@@ -30,7 +38,6 @@ void initSerial(void) {
     U2CON0bits.RXEN = 1;
     U2CON0bits.MODE = 0; //8 bit no parity
     U2BRG = 138;  //115200 baud
-    
     U2CON1bits.ON = 1;
 }
 

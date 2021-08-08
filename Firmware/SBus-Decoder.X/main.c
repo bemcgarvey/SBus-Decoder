@@ -19,62 +19,46 @@
 
 #include <stdio.h>
 
-void configPins(void);
+void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
-void main(void) {   
+void main(void) {
     OSCTUNE = 0;
-    initLED();
-    if (detectSerial()) {
-        ledOn();
-        initSerial();
-        printf("Serial detected\r\n");
-        while (1) {
-            while (!PIR8bits.U2RXIF);
-            char c = U2RXB;
-            if (c == 't') {
-                ledToggle();
-            }
-            if (c == 'd') {
-                printf("debug mode\r\n");
-            }
-        }
-    }
-    configPins();
-    configPMD();
-    configInterrupts();
-    initServos();
-    initSBus();
-    initTimer2();
-    int ledTicks = 0;
-    while (1) {
-        if (sBusRxTicks >= 100) {
-            sBusRxTicks = 0;
-            ++ledTicks;
-            if (ledTicks == 10) {
-                ledToggle();
-                ledTicks = 0;
-            }
-        } 
-    }
-}
-
-void configPins(void) {
     ANSELA = 0;
     LATA = 0;
     TRISA = 0;
     ANSELC = 0;
     LATC = 0;
-    TRISC = 0b00001000;
-    PPSLOCK = 0x55;
-    PPSLOCK = 0xaa;
-    PPSLOCKbits.PPSLOCKED = 0;
-    U1RXPPS = 0b010011;  //RC3
-    RA0PPS = 0x0a;  //PWM1S1P1_OUT
-    RA1PPS = 0x0b;  //PWM1S1P2_OUT
-    RC0PPS = 0x0c;  //PWM2S1P1_OUT
-    RC1PPS = 0x0d;  //PWM2S1P2_OUT
+    initLED();
+    if (detectSerial()) {
+        ledOn();
+        initSerial();
+        printf("Serial detected\r\n");
+    }
+    configPMD();
+    configInterrupts();
+    initServos();
+    initSBus();
+    initTimer2();
+    lockPPS();
+    int packetCount = 0;
+    while (1) {
+        if (packetUpdate) {
+            packetUpdate = false;
+            ++packetCount;
+            if (packetCount == 300) {
+                for (uint8_t i = 1; i <= 8; ++i) {
+                    printf("%d:%d\r\n", i, decodeChannel(i));
+                }
+                ledToggle();
+                packetCount = 0;
+            }
+        }
+    }
+}
+
+void lockPPS(void) {
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
     PPSLOCKbits.PPSLOCKED = 1;

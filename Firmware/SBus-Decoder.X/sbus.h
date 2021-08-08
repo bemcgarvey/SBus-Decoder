@@ -12,6 +12,9 @@
 #define	SBUS_H
 
 #include <stdint.h>
+#include <stdbool.h>
+
+#define SBUS_NUM_CHANNELS   16
 
 typedef union {
     struct {
@@ -28,10 +31,10 @@ typedef union {
 } SBusPacket;
 
 extern volatile SBusPacket rxPacket;
+extern volatile bool packetUpdate;
 
 void initSBus(void);
-uint16_t extractChannel(uint8_t channel);
-
+uint16_t decodeChannel(uint8_t channel);
 
 #endif	/* SBUS_H */
 
