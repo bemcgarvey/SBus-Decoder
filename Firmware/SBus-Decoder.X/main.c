@@ -19,22 +19,31 @@
 
 #include <stdio.h>
 
+typedef enum {
+    INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3
+} OperatingMode;
+
 void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
 void main(void) {
+    OperatingMode mode = INITIALIZING;
     OSCTUNE = 0;
+    //All pins digital outputs
     ANSELA = 0;
     LATA = 0;
     TRISA = 0;
     ANSELC = 0;
     LATC = 0;
+    TRISC = 0;
     initLED();
     if (detectSerial()) {
+        mode = SERIAL_CONNECTED;
         ledOn();
         initSerial();
         printf("Serial detected\r\n");
+        while (1);
     }
     configPMD();
     configInterrupts();
@@ -46,11 +55,16 @@ void main(void) {
     while (1) {
         if (packetUpdate) {
             packetUpdate = false;
+            PWM1S1P1 = 2048 + decodeChannel(1);
+            PWM2S1P1 = 2048 + decodeChannel(2);
+            PWM3S1P1 = 2048 + decodeChannel(3);
+            PWM3S1P2 = 2048 + decodeChannel(5);
+            PWMLOAD = 0b111; //Load all
             ++packetCount;
-            if (packetCount == 300) {
-                for (uint8_t i = 1; i <= 8; ++i) {
-                    printf("%d:%d\r\n", i, decodeChannel(i));
-                }
+            if (packetCount == 75) {
+                //for (uint8_t i = 1; i <= 8; ++i) {
+                  //  printf("%d:%d\r\n", i, decodeChannel(i));
+                //}
                 ledToggle();
                 packetCount = 0;
             }
