@@ -16,19 +16,14 @@
 #include "led.h"
 #include "timers.h"
 #include "servo.h"
-
-#include <stdio.h>
-
-typedef enum {
-    INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3
-} OperatingMode;
+#include "settings.h"
 
 void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
 void main(void) {
-    OperatingMode mode = INITIALIZING;
+    uint8_t mode = INITIALIZING;
     OSCTUNE = 0;
     //All pins digital outputs
     ANSELA = 0;
@@ -38,13 +33,19 @@ void main(void) {
     LATC = 0;
     TRISC = 0;
     initLED();
+    if (!loadSettings()) {
+        if (!setDefaultSettings()) {
+            ledOn();
+            while(1);
+        }
+    }
     if (detectSerial()) {
         mode = SERIAL_CONNECTED;
         ledOn();
         initSerial();
-        printf("Serial detected\r\n");
         while (1);
     }
+    mode = settings.requestedMode;
     configPMD();
     configInterrupts();
     initServos();
@@ -55,16 +56,26 @@ void main(void) {
     while (1) {
         if (packetUpdate) {
             packetUpdate = false;
-            PWM1S1P1 = 2048 + decodeChannel(1);
-            PWM2S1P1 = 2048 + decodeChannel(2);
-            PWM3S1P1 = 2048 + decodeChannel(3);
-            PWM3S1P2 = 2048 + decodeChannel(5);
+            uint8_t channel;
+            channel = settings.outputs[0].channel;
+            if (channel != 0) {
+                PWM1S1P1 = 2048 + decodeChannel(channel);
+            }
+            channel = settings.outputs[1].channel;
+            if (channel != 0) {
+                PWM2S1P1 = 2048 + decodeChannel(channel);
+            }
+            channel = settings.outputs[2].channel;
+            if (channel != 0) {
+                PWM3S1P1 = 2048 + decodeChannel(channel);
+            }
+            channel = settings.outputs[3].channel;
+            if (channel != 0) {
+                PWM3S1P2 = 2048 + decodeChannel(channel);
+            }
             PWMLOAD = 0b111; //Load all
             ++packetCount;
             if (packetCount == 75) {
-                //for (uint8_t i = 1; i <= 8; ++i) {
-                  //  printf("%d:%d\r\n", i, decodeChannel(i));
-                //}
                 ledToggle();
                 packetCount = 0;
             }

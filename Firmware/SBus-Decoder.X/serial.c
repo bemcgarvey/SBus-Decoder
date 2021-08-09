@@ -41,7 +41,7 @@ void initSerial(void) {
     U2CON1bits.ON = 1;
 }
 
-void putch(char c) {
+/*void putch(char c) {
     while (!PIR8bits.U2TXIF);
     U2TXB = c;
-}
+}*/
