@@ -43,7 +43,9 @@ void main(void) {
         mode = SERIAL_CONNECTED;
         ledOn();
         initSerial();
-        while (1);
+        while (1) {
+            serialTasks();
+        }
     }
     mode = settings.requestedMode;
     configPMD();

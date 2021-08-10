@@ -11,6 +11,10 @@
 #include <xc.h>
 #include "serial.h"
 #include "timers.h"
+#include "version.h"
+#include "settings.h"
+
+void txBytes(uint8_t *buff, uint8_t count);
 
 bool detectSerial(void) {
     WPUCbits.WPUC1 = 1;
@@ -31,17 +35,38 @@ void initSerial(void) {
     LATAbits.LATA1 = 0; //Set to 0 for gnd
     TRISAbits.TRISA1 = 0; //Gnd
     U2RXPPS = 0b00000; //RA0
-    RC0PPS = 0x13;     //UART2TX
+    RC0PPS = 0x13; //UART2TX
     U2CON1bits.ON = 0;
     U2CON0bits.BRGS = 1;
     U2CON0bits.TXEN = 1;
     U2CON0bits.RXEN = 1;
     U2CON0bits.MODE = 0; //8 bit no parity
-    U2BRG = 138;  //115200 baud
+    U2BRG = 138; //115200 baud
     U2CON1bits.ON = 1;
 }
 
-/*void putch(char c) {
-    while (!PIR8bits.U2TXIF);
-    U2TXB = c;
-}*/
+void serialTasks(void) {
+    uint8_t rx;
+    while (PIR8bits.U2RXIF == 0);
+    rx = U2RXB;
+    switch (rx) {
+        case 'v':
+            while (!PIR8bits.U2TXIF);
+            U2TXB = MAJOR_VERSION;
+            while (!PIR8bits.U2TXIF);
+            U2TXB = MINOR_VERSION;
+            break;
+        case 's':
+            txBytes((uint8_t *)&settings, sizeof(Settings));
+            break;
+    }
+}
+
+void txBytes(uint8_t *buff, uint8_t count) {
+    while (count > 0) {
+        while (!PIR8bits.U2TXIF);
+        U2TXB = *buff++;
+        --count;
+    }
+}
+

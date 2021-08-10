@@ -15,6 +15,7 @@
 
 bool detectSerial(void);
 void initSerial(void);
+void serialTasks(void);
 
 #endif	/* SERIAL_H */
 

@@ -10,6 +10,7 @@
       <itemPath>timers.h</itemPath>
       <itemPath>serial.h</itemPath>
       <itemPath>settings.h</itemPath>
+      <itemPath>version.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
