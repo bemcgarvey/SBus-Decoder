@@ -42,6 +42,7 @@ extern Settings settings;
 bool loadSettings(void);
 bool saveSettings(void);
 bool setDefaultSettings(void);
+uint8_t calcChecksum(uint8_t *buff);
 
 #endif	/* SETTINGS_H */
 

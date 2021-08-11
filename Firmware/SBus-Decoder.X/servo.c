@@ -20,7 +20,6 @@ void initServos(void) {
     RA1PPS = 0x0c; //PWM2S1P1_OUT
     RC0PPS = 0x0e; //PWM3S1P1_OUT
     RC1PPS = 0x0f; //PWM3S1P2_OUT
-    //RC1PPS = 0x24; //TODO remove after testing
     //Setup NCO for 2048000 MHz
     NCO1CONbits.EN = 0;
     NCO1CONbits.PFM = 0; //FDC mode

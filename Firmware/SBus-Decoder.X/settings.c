@@ -33,7 +33,6 @@ const Settings defaultSettings = {
 
 void writeEE(uint16_t address, uint8_t* bytes, uint16_t count);
 void readEE(uint16_t address, uint8_t* bytes, uint16_t count);
-uint8_t calcChksum(uint8_t *buff);
 
 bool loadSettings(void) {
     uint8_t chksum;
@@ -41,7 +40,7 @@ bool loadSettings(void) {
     readEE(eeAddress, (uint8_t *) &settings, sizeof (Settings));
     eeAddress += sizeof (Settings);
     readEE(eeAddress, &chksum, 1);
-    if ((calcChksum((uint8_t *)&settings) ^ chksum) == 0) {
+    if ((calcChecksum((uint8_t *)&settings) ^ chksum) == 0) {
         return true;
     } else {
         return false;
@@ -50,7 +49,7 @@ bool loadSettings(void) {
 
 bool saveSettings(void) {
     uint8_t chksum;
-    chksum = calcChksum((uint8_t *)&settings);
+    chksum = calcChecksum((uint8_t *)&settings);
     uint16_t eeAddress = EE_START_ADDRESS;
     writeEE(eeAddress, (uint8_t *)&settings, sizeof (Settings));
     eeAddress += sizeof (Settings);
@@ -101,7 +100,7 @@ void readEE(uint16_t address, uint8_t* bytes, uint16_t count) {
     }
 }
 
-uint8_t calcChksum(uint8_t *buff) {
+uint8_t calcChecksum(uint8_t *buff) {
     uint8_t len = sizeof(Settings);
     uint8_t chksum = 0xaa;
     while (len > 0) {

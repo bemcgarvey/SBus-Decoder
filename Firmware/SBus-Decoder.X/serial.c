@@ -13,6 +13,7 @@
 #include "timers.h"
 #include "version.h"
 #include "settings.h"
+#include "string.h"
 
 void txBytes(uint8_t *buff, uint8_t count);
 
@@ -47,6 +48,10 @@ void initSerial(void) {
 
 void serialTasks(void) {
     uint8_t rx;
+    Settings tempSettings;
+    uint8_t len;
+    uint8_t *p;
+    uint8_t chksum;
     while (PIR8bits.U2RXIF == 0);
     rx = U2RXB;
     switch (rx) {
@@ -57,7 +62,29 @@ void serialTasks(void) {
             U2TXB = MINOR_VERSION;
             break;
         case 's':
-            txBytes((uint8_t *)&settings, sizeof(Settings));
+            txBytes((uint8_t *) & settings, sizeof (Settings));
+            chksum = calcChecksum((uint8_t *)&settings);
+            txBytes(&chksum, 1);
+            break;
+        case 'u':
+            len = sizeof (Settings);
+            p = (uint8_t *)&tempSettings;
+            while (len > 0) {
+                while (!PIR8bits.U2RXIF);
+                *p++ = U2RXB;
+                --len;
+            }
+            while (!PIR8bits.U2RXIF);
+            uint8_t chksum = U2RXB;
+            char ackVal = NACK;
+            if (chksum == calcChecksum((uint8_t *)&tempSettings)) {
+                memcpy(&settings, &tempSettings, sizeof (Settings));
+                if (saveSettings()) {
+                    ackVal = ACK;
+                }
+            }
+            while (!PIR8bits.U2TXIF);
+            U2TXB = ackVal;
             break;
     }
 }

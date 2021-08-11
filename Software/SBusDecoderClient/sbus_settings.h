@@ -26,6 +26,6 @@ typedef struct {
     } outputs[NUM_OUTPUTS];
 } Settings;
 
-uint8_t calcChksum(uint8_t *buff);
+uint8_t calcChecksum(uint8_t *buff);
 
 #endif // SBUS_SETTINGS_H

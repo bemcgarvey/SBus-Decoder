@@ -13,6 +13,8 @@
 
 #include <stdbool.h>
 
+enum {ACK = 0x06, NACK = 0x15};
+
 bool detectSerial(void);
 void initSerial(void);
 void serialTasks(void);

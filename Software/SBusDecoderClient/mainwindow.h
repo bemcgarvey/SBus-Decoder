@@ -22,12 +22,15 @@ private:
     Ui::MainWindow *ui;
     QLabel *portLabel;
     QLabel *connectedLabel;
+    QLabel *versionLabel;
     QSerialPort *port;
     enum {RX_IDLE, RX_VERSION, RX_SETTINGS, RX_ACK} rxState;
+    enum {ACK = 0x06, NACK = 0x15};
     int bytesNeeded;
-    char rxBuffer[100]; //TODO adjust size
+    char rxBuffer[256];
     char *bufferPos;
     void updateControls(void);
+    void updateSettings(void);
     Settings settings;
 private slots:
     void updatePortMenu(void);
@@ -36,5 +39,6 @@ private slots:
     void on_actionExit_triggered();
     void on_readPushButton_clicked();
     void on_out3FrameRate_currentIndexChanged(int index);
+    void on_writePushButton_clicked();
 };
 #endif // MAINWINDOW_H
