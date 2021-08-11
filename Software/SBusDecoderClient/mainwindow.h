@@ -40,5 +40,6 @@ private slots:
     void on_readPushButton_clicked();
     void on_out3FrameRate_currentIndexChanged(int index);
     void on_writePushButton_clicked();
+    void on_actionAbout_triggered();
 };
 #endif // MAINWINDOW_H

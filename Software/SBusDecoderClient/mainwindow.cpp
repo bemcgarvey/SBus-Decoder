@@ -4,10 +4,11 @@
 #include <QSerialPortInfo>
 #include <QMessageBox>
 #include <QtDebug>
+#include <memory>
+#include "aboutdialog.h"
 
 //TODO add icons
 //TODO remove qDebugs
-//TODO about dialog
 //TODO change port to a unique_ptr???
 
 MainWindow::MainWindow(QWidget *parent)
@@ -215,5 +216,12 @@ void MainWindow::on_writePushButton_clicked()
     bytesNeeded = 1;
     bufferPos = rxBuffer;
     rxBuffer[0] = 0xff; //make sure there is not a left over ACK in the buffer
+}
+
+
+void MainWindow::on_actionAbout_triggered()
+{
+    std::unique_ptr<AboutDialog> dlg(new AboutDialog(this));
+    dlg->exec();
 }
 
