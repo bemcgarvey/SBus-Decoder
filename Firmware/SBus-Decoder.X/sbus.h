@@ -15,6 +15,7 @@
 #include <stdbool.h>
 
 #define SBUS_NUM_CHANNELS   16
+#define SBUS_TIMEOUT        100  //time in ms before failsafe
 
 typedef union {
     struct {

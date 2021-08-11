@@ -60,6 +60,7 @@ void __interrupt(irq(U1RX), low_priority, base(8)) U1RXISR(void) {
             if (bytesReceived == sizeof (rxPacket)) {
                 receivingPacket = false;
                 packetUpdate = true;
+                sBusPacketTicks = SBUS_TIMEOUT;
             } else {
                 rxPacket.bytes[bytesReceived] = rx;
                 ++bytesReceived;

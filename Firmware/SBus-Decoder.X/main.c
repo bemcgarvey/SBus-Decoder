@@ -22,6 +22,12 @@ void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
+//TODO enable WDT
+//TODO enable BOR??
+//TODO check configuration bits. 
+//TODO Use PMD to turn off unused modules
+bool failsafeEngaged = 0;
+
 void main(void) {
     uint8_t mode = INITIALIZING;
     OSCTUNE = 0;
@@ -56,8 +62,34 @@ void main(void) {
     lockPPS();
     int packetCount = 0;
     while (1) {
+        if (!failsafeEngaged && sBusPacketTicks == 0) {
+            failsafeEngaged = true;
+            ledOn();
+            if (settings.outputs[0].failsafeMode == FAIL_OFF) {
+                PWM1S1P1 = 0;
+            } else if (settings.outputs[0].failsafeMode == FAIL_NEUTRAL) {
+                PWM1S1P1 = 2048 + 1023;
+            }
+            if (settings.outputs[1].failsafeMode == FAIL_OFF) {
+                PWM2S1P1 = 0;
+            } else if (settings.outputs[1].failsafeMode == FAIL_NEUTRAL) {
+                PWM2S1P1 = 2048 + 1023;
+            }
+            if (settings.outputs[2].failsafeMode == FAIL_OFF) {
+                PWM3S1P1 = 0;
+            } else if (settings.outputs[2].failsafeMode == FAIL_NEUTRAL) {
+                PWM3S1P1 = 2048 + 1023;
+            }
+            if (settings.outputs[3].failsafeMode == FAIL_OFF) {
+                PWM3S1P2 = 0;
+            } else if (settings.outputs[3].failsafeMode == FAIL_NEUTRAL) {
+                PWM3S1P2 = 2048 + 1023;
+            }
+            PWMLOAD = 0b111; //Load all
+        }
         if (packetUpdate) {
             packetUpdate = false;
+            failsafeEngaged = false;
             uint8_t channel;
             channel = settings.outputs[0].channel;
             if (channel != 0) {
@@ -76,6 +108,7 @@ void main(void) {
                 PWM3S1P2 = 2048 + decodeChannel(channel);
             }
             PWMLOAD = 0b111; //Load all
+            //TODO remove below when done testing
             ++packetCount;
             if (packetCount == 75) {
                 ledToggle();

@@ -5,6 +5,11 @@
 #include <QMessageBox>
 #include <QtDebug>
 
+//TODO add icons
+//TODO remove qDebugs
+//TODO about dialog
+//TODO change port to a unique_ptr
+
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), port(nullptr)
@@ -21,6 +26,11 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    if (port != nullptr) {
+        port->close();
+        delete port;
+    }
+    port = nullptr;
     delete ui;
 }
 
