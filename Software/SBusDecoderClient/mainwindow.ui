@@ -85,6 +85,11 @@
             <widget class="QComboBox" name="out1Channel">
              <item>
               <property name="text">
+               <string>Off</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>1</string>
               </property>
              </item>
@@ -234,6 +239,11 @@
            </item>
            <item>
             <widget class="QComboBox" name="out2Channel">
+             <item>
+              <property name="text">
+               <string>Off</string>
+              </property>
+             </item>
              <item>
               <property name="text">
                <string>1</string>
@@ -387,6 +397,11 @@
             <widget class="QComboBox" name="out3Channel">
              <item>
               <property name="text">
+               <string>Off</string>
+              </property>
+             </item>
+             <item>
+              <property name="text">
                <string>1</string>
               </property>
              </item>
@@ -536,6 +551,11 @@
            </item>
            <item>
             <widget class="QComboBox" name="out4Channel">
+             <item>
+              <property name="text">
+               <string>Off</string>
+              </property>
+             </item>
              <item>
               <property name="text">
                <string>1</string>

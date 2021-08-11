@@ -8,7 +8,7 @@
 //TODO add icons
 //TODO remove qDebugs
 //TODO about dialog
-//TODO change port to a unique_ptr
+//TODO change port to a unique_ptr???
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -37,16 +37,16 @@ MainWindow::~MainWindow()
 void MainWindow::updateControls()
 {
     ui->tabWidget->setCurrentIndex(settings.requestedMode - 1);
-    ui->out1Channel->setCurrentIndex(settings.outputs[0].channel - 1);
+    ui->out1Channel->setCurrentIndex(settings.outputs[0].channel);
     ui->out1FrameRate->setCurrentIndex(settings.outputs[0].frameRate - 1);
     ui->out1Failsafe->setCurrentIndex(settings.outputs[0].failsafeMode - 1);
-    ui->out2Channel->setCurrentIndex(settings.outputs[1].channel - 1);
+    ui->out2Channel->setCurrentIndex(settings.outputs[1].channel);
     ui->out2FrameRate->setCurrentIndex(settings.outputs[1].frameRate - 1);
     ui->out2Failsafe->setCurrentIndex(settings.outputs[1].failsafeMode - 1);
-    ui->out3Channel->setCurrentIndex(settings.outputs[2].channel - 1);
+    ui->out3Channel->setCurrentIndex(settings.outputs[2].channel);
     ui->out3FrameRate->setCurrentIndex(settings.outputs[2].frameRate - 1);
     ui->out3Failsafe->setCurrentIndex(settings.outputs[2].failsafeMode - 1);
-    ui->out4Channel->setCurrentIndex(settings.outputs[3].channel - 1);
+    ui->out4Channel->setCurrentIndex(settings.outputs[3].channel);
     //ui->out4FrameRate->setCurrentIndex(settings.outputs[3].frameRate - 1);
     ui->out4Failsafe->setCurrentIndex(settings.outputs[3].failsafeMode - 1);
 }
@@ -54,16 +54,16 @@ void MainWindow::updateControls()
 void MainWindow::updateSettings()
 {
     settings.requestedMode = ui->tabWidget->currentIndex() + 1;
-    settings.outputs[0].channel = ui->out1Channel->currentIndex() + 1;
+    settings.outputs[0].channel = ui->out1Channel->currentIndex();
     settings.outputs[0].frameRate = ui->out1FrameRate->currentIndex() + 1;
     settings.outputs[0].failsafeMode = ui->out1Failsafe->currentIndex() + 1;
-    settings.outputs[1].channel = ui->out2Channel->currentIndex() + 1;
+    settings.outputs[1].channel = ui->out2Channel->currentIndex();
     settings.outputs[1].frameRate = ui->out2FrameRate->currentIndex() + 1;
     settings.outputs[1].failsafeMode = ui->out2Failsafe->currentIndex() + 1;
-    settings.outputs[2].channel = ui->out3Channel->currentIndex() + 1;
+    settings.outputs[2].channel = ui->out3Channel->currentIndex();
     settings.outputs[2].frameRate = ui->out3FrameRate->currentIndex() + 1;
     settings.outputs[2].failsafeMode = ui->out3Failsafe->currentIndex() + 1;
-    settings.outputs[3].channel = ui->out4Channel->currentIndex() + 1;
+    settings.outputs[3].channel = ui->out4Channel->currentIndex();
     settings.outputs[3].frameRate = ui->out4FrameRate->currentIndex() + 1;
     settings.outputs[3].failsafeMode = ui->out4Failsafe->currentIndex() + 1;
 }
