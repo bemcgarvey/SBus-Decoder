@@ -26,6 +26,7 @@ void configPMD(void);
 //TODO enable BOR??
 //TODO check configuration bits. 
 //TODO Use PMD to turn off unused modules
+
 bool failsafeEngaged = 0;
 
 void main(void) {
@@ -62,28 +63,53 @@ void main(void) {
     lockPPS();
     int packetCount = 0;
     while (1) {
+        int16_t pulse;
         if (!failsafeEngaged && sBusPacketTicks == 0) {
             failsafeEngaged = true;
-            ledOn();
+            ledOff();
             if (settings.outputs[0].failsafeMode == FAIL_OFF) {
                 PWM1S1P1 = 0;
             } else if (settings.outputs[0].failsafeMode == FAIL_NEUTRAL) {
-                PWM1S1P1 = 2048 + 1023;
+                pulse = 1023 + settings.outputs[0].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM1S1P1 = (uint16_t)(2048 + pulse);
             }
             if (settings.outputs[1].failsafeMode == FAIL_OFF) {
                 PWM2S1P1 = 0;
             } else if (settings.outputs[1].failsafeMode == FAIL_NEUTRAL) {
-                PWM2S1P1 = 2048 + 1023;
+                pulse = 1023 + settings.outputs[1].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM2S1P1 = (uint16_t)(2048 + pulse);
             }
             if (settings.outputs[2].failsafeMode == FAIL_OFF) {
                 PWM3S1P1 = 0;
             } else if (settings.outputs[2].failsafeMode == FAIL_NEUTRAL) {
-                PWM3S1P1 = 2048 + 1023;
+                pulse = 1023 + settings.outputs[2].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM3S1P1 = (uint16_t)(2048 + pulse);
             }
             if (settings.outputs[3].failsafeMode == FAIL_OFF) {
                 PWM3S1P2 = 0;
             } else if (settings.outputs[3].failsafeMode == FAIL_NEUTRAL) {
-                PWM3S1P2 = 2048 + 1023;
+                pulse = 1023 + settings.outputs[3].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM3S1P2 = (uint16_t)(2048 + pulse);
             }
             PWMLOAD = 0b111; //Load all
         }
@@ -93,22 +119,65 @@ void main(void) {
             uint8_t channel;
             channel = settings.outputs[0].channel;
             if (channel != 0) {
-                PWM1S1P1 = 2048 + decodeChannel(channel);
+                if (settings.outputs[0].reverse) {
+                    pulse = 2047 - decodeChannel(channel);
+                } else {
+                    pulse = decodeChannel(channel);
+                }
+                pulse += settings.outputs[0].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM1S1P1 = (uint16_t)(2048 + pulse);
             }
             channel = settings.outputs[1].channel;
             if (channel != 0) {
-                PWM2S1P1 = 2048 + decodeChannel(channel);
+                if (settings.outputs[1].reverse) {
+                    pulse = 2047 - decodeChannel(channel);
+                } else {
+                    pulse = decodeChannel(channel);
+                }
+                pulse += settings.outputs[1].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM2S1P1 = (uint16_t)(2048 + pulse);
             }
             channel = settings.outputs[2].channel;
             if (channel != 0) {
-                PWM3S1P1 = 2048 + decodeChannel(channel);
+                if (settings.outputs[2].reverse) {
+                    pulse = 2047 - decodeChannel(channel);
+                } else {
+                    pulse = decodeChannel(channel);
+                }
+                pulse += settings.outputs[2].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM3S1P1 = (uint16_t)(2048 + pulse);
             }
             channel = settings.outputs[3].channel;
             if (channel != 0) {
-                PWM3S1P2 = 2048 + decodeChannel(channel);
+                if (settings.outputs[3].reverse) {
+                    pulse = 2047 - decodeChannel(channel);
+                } else {
+                    pulse = decodeChannel(channel);
+                }
+                pulse += settings.outputs[3].subTrim;
+                if (pulse < 0) {
+                    pulse = 0;
+                } else if (pulse > 2047) {
+                    pulse = 2047;
+                }
+                PWM3S1P2 = (uint16_t)(2048 + pulse);
             }
             PWMLOAD = 0b111; //Load all
-            //TODO remove below when done testing
             ++packetCount;
             if (packetCount == 75) {
                 ledToggle();

@@ -75,10 +75,9 @@ void __interrupt(irq(U1RX), low_priority, base(8)) U1RXISR(void) {
     sBusRxTicks = 0;
 }
 
-uint16_t decodeChannel(uint8_t channel) {
+int16_t decodeChannel(uint8_t channel) {
     uint16_t pwm = 0;
     switch (channel) {
-            //TODO check these against RX12 code for encoding
         case 1: pwm = (uint16_t) rxPacket.channels[0] | ((uint16_t) rxPacket.channels[1] << 8);
             break;
         case 2: pwm = (uint16_t) rxPacket.channels[1] >> 3 | (uint16_t) rxPacket.channels[2] << 5;
@@ -130,5 +129,5 @@ uint16_t decodeChannel(uint8_t channel) {
         default: pwm = 0;
     }
     pwm &= 0x7ff;
-    return pwm;
+    return (int16_t)pwm;
 }

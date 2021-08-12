@@ -28,15 +28,15 @@ enum {
     INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3
 };
 
-//TODO add reverse setting to each channel - allows two servos on same channel with one reversed
-//TODO add sub-trim
-
 typedef struct {
     uint8_t requestedMode;
+    uint8_t filler;
     struct {
         uint8_t channel;
         uint8_t frameRate;
         uint8_t failsafeMode;
+        uint8_t reverse;
+        int16_t subTrim;
     } outputs[NUM_OUTPUTS];
 } Settings;
 

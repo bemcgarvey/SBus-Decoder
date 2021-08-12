@@ -35,7 +35,7 @@ extern volatile SBusPacket rxPacket;
 extern volatile bool packetUpdate;
 
 void initSBus(void);
-uint16_t decodeChannel(uint8_t channel);
+int16_t decodeChannel(uint8_t channel);
 
 #endif	/* SBUS_H */
 

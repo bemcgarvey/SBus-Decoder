@@ -50,6 +50,14 @@ void MainWindow::updateControls()
     ui->out4Channel->setCurrentIndex(settings.outputs[3].channel);
     //ui->out4FrameRate->setCurrentIndex(settings.outputs[3].frameRate - 1);
     ui->out4Failsafe->setCurrentIndex(settings.outputs[3].failsafeMode - 1);
+    ui->out1Reverse->setChecked(settings.outputs[0].reverse);
+    ui->out1subTrim->setValue(settings.outputs[0].subTrim);
+    ui->out2Reverse->setChecked(settings.outputs[1].reverse);
+    ui->out2subTrim->setValue(settings.outputs[1].subTrim);
+    ui->out3Reverse->setChecked(settings.outputs[2].reverse);
+    ui->out3subTrim->setValue(settings.outputs[2].subTrim);
+    ui->out4Reverse->setChecked(settings.outputs[3].reverse);
+    ui->out4subTrim->setValue(settings.outputs[3].subTrim);
 }
 
 void MainWindow::updateSettings()
@@ -67,6 +75,14 @@ void MainWindow::updateSettings()
     settings.outputs[3].channel = ui->out4Channel->currentIndex();
     settings.outputs[3].frameRate = ui->out4FrameRate->currentIndex() + 1;
     settings.outputs[3].failsafeMode = ui->out4Failsafe->currentIndex() + 1;
+    settings.outputs[0].reverse = ui->out1Reverse->isChecked();
+    settings.outputs[0].subTrim = ui->out1subTrim->value();
+    settings.outputs[1].reverse = ui->out2Reverse->isChecked();
+    settings.outputs[1].subTrim = ui->out2subTrim->value();
+    settings.outputs[2].reverse = ui->out3Reverse->isChecked();
+    settings.outputs[2].subTrim = ui->out3subTrim->value();
+    settings.outputs[3].reverse = ui->out4Reverse->isChecked();
+    settings.outputs[3].subTrim = ui->out4subTrim->value();
 }
 
 void MainWindow::updatePortMenu()
@@ -131,8 +147,6 @@ void MainWindow::onReadyRead()
         switch (rxState) {
         case RX_IDLE:
             port->clear(QSerialPort::Input);
-            break;
-            qDebug() << "*";
             break;
         case RX_VERSION:
             received = port->read(bufferPos, bytesNeeded);

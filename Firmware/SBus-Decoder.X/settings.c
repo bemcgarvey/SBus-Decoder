@@ -16,19 +16,19 @@
 #define EE_START_ADDRESS 0
 
 Settings settings = {
-    0,
-    {{0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0},
-    {0, 0, 0}}
+    0, 0,
+    {{0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0},
+    {0, 0, 0, 0, 0}}
 };
 
 const Settings defaultSettings = {
-    SBUS_DECODER,
-    {{0, FRAME_50HZ, FAIL_LAST},
-    {0, FRAME_50HZ, FAIL_LAST},
-    {0, FRAME_50HZ, FAIL_LAST},
-    {0, FRAME_50HZ, FAIL_LAST}}
+    SBUS_DECODER, 0,
+    {{0, FRAME_50HZ, FAIL_LAST, 0, 0},
+    {0, FRAME_50HZ, FAIL_LAST, 0, 0},
+    {0, FRAME_50HZ, FAIL_LAST, 0, 0},
+    {0, FRAME_50HZ, FAIL_LAST, 0, 0}}
 };
 
 void writeEE(uint16_t address, uint8_t* bytes, uint16_t count);
