@@ -19,7 +19,9 @@ void initServos(void) {
     RA0PPS = 0x0a; //PWM1S1P1_OUT
     RA1PPS = 0x0c; //PWM2S1P1_OUT
     RC0PPS = 0x0e; //PWM3S1P1_OUT
-    RC1PPS = 0x0f; //PWM3S1P2_OUT
+    if (!settings.options.sbusPassthrough) {
+        RC1PPS = 0x0f; //PWM3S1P2_OUT
+    }
     //Setup NCO for 2048000 MHz
     NCO1CONbits.EN = 0;
     NCO1CONbits.PFM = 0; //FDC mode
@@ -32,7 +34,7 @@ void initServos(void) {
     PWM1CLK = 0b1010; //NCO1
     PWM1PR = calculatePeriod(settings.outputs[0].frameRate);
     PWM1S1CFGbits.MODE = 0b000; //left justified;
-    PWM1S1P1 = 0;  //Start no pulse
+    PWM1S1P1 = 0; //Start no pulse
     PWM2CLK = 0b1010; //NCO1
     PWM2PR = calculatePeriod(settings.outputs[1].frameRate);
     PWM2S1CFGbits.MODE = 0b000;
@@ -54,7 +56,6 @@ void initServos(void) {
     }
     PWMEN = enable; //Turn on active outputs
 }
-
 
 uint16_t calculatePeriod(uint8_t frameRate) {
     switch (frameRate) {

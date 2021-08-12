@@ -17,9 +17,12 @@ enum {
     INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3
 };
 
+//Option flags
+enum {SBUS_PASSTHROUGH = 0x01};
+
 typedef struct {
     uint8_t requestedMode;
-    uint8_t filler;
+    uint8_t options;
     struct {
         uint8_t channel;
         uint8_t frameRate;

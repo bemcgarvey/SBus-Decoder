@@ -13,6 +13,7 @@
 #include "sbus.h"
 #include "timers.h"
 #include "led.h"
+#include "settings.h"
 
 #define SBUS_HEADER 0x0f
 #define SBUS_FOOTER 0x00
@@ -31,11 +32,28 @@ void initSBus(void) {
     U1CON0bits.RXEN = 1;
     U1CON2bits.RUNOVF = 1; //synch during overflow
     U1CON2bits.RXPOL = 1; //Inverted
-    U1CON2bits.STP = 0b00; //Verify 1 stop bit.  TODO should this be 2 stop bits?
+    U1CON2bits.STP = 0b00; //Verify 1 stop bit.
     U1CON0bits.MODE = 0b0011; //8 bit even parity
     U1BRG = 159; //100000 baud
     IPR4bits.U1RXIP = 0;
     PIE4bits.U1RXIE = 1;
+    if (settings.options.sbusPassthrough) {
+        CLCIN0PPS = 0b010011; //RC3
+        RC1PPS = 0x01; //CLC1OUT
+        CLCSELECT = 0;
+        CLCnCONbits.EN = 0;
+        CLCnCONbits.MODE = 0b010; //4-input AND
+        CLCnPOL = 0b00001110;
+        CLCnSEL0 = 0;
+        CLCnSEL1 = 0;
+        CLCnSEL2 = 0;
+        CLCnSEL3 = 0;  //CLCIN0PPS
+        CLCnGLS0 = 0x02;  //Gate input 1 true
+        CLCnGLS1 = 0; //no inputs - makes true because of polarity
+        CLCnGLS2 = 0;
+        CLCnGLS3 = 0;
+        CLCnCONbits.EN = 1;
+    }
     U1CON1bits.ON = 1;
 }
 

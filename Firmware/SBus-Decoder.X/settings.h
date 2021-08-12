@@ -30,7 +30,10 @@ enum {
 
 typedef struct {
     uint8_t requestedMode;
-    uint8_t filler;
+    struct {
+        uint8_t sbusPassthrough : 1;
+        uint8_t : 7;
+    } options;
     struct {
         uint8_t channel;
         uint8_t frameRate;

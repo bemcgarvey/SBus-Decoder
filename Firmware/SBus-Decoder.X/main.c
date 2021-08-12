@@ -26,6 +26,7 @@ void configPMD(void);
 //TODO enable BOR??
 //TODO check configuration bits. 
 //TODO Use PMD to turn off unused modules
+//TODO Final warning check
 
 bool failsafeEngaged = 0;
 
@@ -179,8 +180,10 @@ void main(void) {
             }
             PWMLOAD = 0b111; //Load all
             ++packetCount;
-            if (packetCount == 75) {
-                ledToggle();
+            if (packetCount == 300) {
+                ledOn();
+            } else if (packetCount == 305) {
+                ledOff();
                 packetCount = 0;
             }
         }

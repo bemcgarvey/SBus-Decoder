@@ -10,6 +10,7 @@
 //TODO add icons
 //TODO remove qDebugs
 //TODO change port to a unique_ptr???
+//TODO make read timeout so we can detect read error
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -58,6 +59,7 @@ void MainWindow::updateControls()
     ui->out3subTrim->setValue(settings.outputs[2].subTrim);
     ui->out4Reverse->setChecked(settings.outputs[3].reverse);
     ui->out4subTrim->setValue(settings.outputs[3].subTrim);
+    ui->passThrough->setChecked(settings.options & SBUS_PASSTHROUGH);
 }
 
 void MainWindow::updateSettings()
@@ -83,6 +85,11 @@ void MainWindow::updateSettings()
     settings.outputs[2].subTrim = ui->out3subTrim->value();
     settings.outputs[3].reverse = ui->out4Reverse->isChecked();
     settings.outputs[3].subTrim = ui->out4subTrim->value();
+    if (ui->passThrough->isChecked()) {
+        settings.options |= SBUS_PASSTHROUGH;
+    } else {
+        settings.options &= ~SBUS_PASSTHROUGH;
+    }
 }
 
 void MainWindow::updatePortMenu()
@@ -237,5 +244,12 @@ void MainWindow::on_actionAbout_triggered()
 {
     std::unique_ptr<AboutDialog> dlg(new AboutDialog(this));
     dlg->exec();
+}
+
+
+void MainWindow::on_passThrough_stateChanged(int arg1)
+{
+    ui->out4Channel->setCurrentIndex(0);
+        ui->output4Frame->setEnabled(!arg1);
 }
 
