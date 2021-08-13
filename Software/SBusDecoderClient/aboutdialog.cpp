@@ -5,6 +5,7 @@ AboutDialog::AboutDialog(QWidget *parent) :
     QDialog(parent),
     ui(new Ui::AboutDialog)
 {
+    setWindowFlags(Qt::Dialog | Qt::CustomizeWindowHint | Qt::WindowTitleHint | Qt::WindowCloseButtonHint | Qt::MSWindowsFixedSizeDialogHint);
     ui->setupUi(this);
 }
 
@@ -15,6 +16,6 @@ AboutDialog::~AboutDialog()
 
 void AboutDialog::on_closePushButton_clicked()
 {
-    close();
+    accept();
 }
 

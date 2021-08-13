@@ -7,7 +7,6 @@
 #include "aboutdialog.h"
 #include <QTimer>
 
-//TODO add icons
 //TODO remove qDebugs
 
 MainWindow::MainWindow(QWidget *parent)
