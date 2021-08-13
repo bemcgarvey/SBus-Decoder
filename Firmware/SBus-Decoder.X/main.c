@@ -32,27 +32,35 @@ bool failsafeEngaged = 0;
 
 void main(void) {
     uint8_t mode = INITIALIZING;
+    if (PCON0bits.RWDT == 0) {
+        mode = WDT;
+    }
+    PCON0bits.RWDT = 1;
     OSCTUNE = 0;
-    //All pins digital outputs
+    //All pins digital outputs except RC3
+    //RC3 needs to stay in input so it doesn't detect as serial when in
+    //pass-through mode.
     ANSELA = 0;
     LATA = 0;
     TRISA = 0;
     ANSELC = 0;
     LATC = 0;
-    TRISC = 0;
+    TRISC = 0b00001000;
     initLED();
-    if (!loadSettings()) {
-        if (!setDefaultSettings()) {
-            ledOn();
-            while(1);
+    if (mode != WDT) {
+        if (!loadSettings()) {
+            if (!setDefaultSettings()) {
+                ledOn();
+                while (1);
+            }
         }
-    }
-    if (detectSerial()) {
-        mode = SERIAL_CONNECTED;
-        ledOn();
-        initSerial();
-        while (1) {
-            serialTasks();
+        if (detectSerial()) {
+            mode = SERIAL_CONNECTED;
+            ledOn();
+            initSerial();
+            while (1) {
+                serialTasks();
+            }
         }
     }
     mode = settings.requestedMode;
@@ -63,6 +71,8 @@ void main(void) {
     initTimer2();
     lockPPS();
     int packetCount = 0;
+    WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
+    WDTCON0bits.SEN = 1;
     while (1) {
         int16_t pulse;
         if (!failsafeEngaged && sBusPacketTicks == 0) {
@@ -77,7 +87,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM1S1P1 = (uint16_t)(2048 + pulse);
+                PWM1S1P1 = (uint16_t) (2048 + pulse);
             }
             if (settings.outputs[1].failsafeMode == FAIL_OFF) {
                 PWM2S1P1 = 0;
@@ -88,7 +98,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM2S1P1 = (uint16_t)(2048 + pulse);
+                PWM2S1P1 = (uint16_t) (2048 + pulse);
             }
             if (settings.outputs[2].failsafeMode == FAIL_OFF) {
                 PWM3S1P1 = 0;
@@ -99,7 +109,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM3S1P1 = (uint16_t)(2048 + pulse);
+                PWM3S1P1 = (uint16_t) (2048 + pulse);
             }
             if (settings.outputs[3].failsafeMode == FAIL_OFF) {
                 PWM3S1P2 = 0;
@@ -110,7 +120,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM3S1P2 = (uint16_t)(2048 + pulse);
+                PWM3S1P2 = (uint16_t) (2048 + pulse);
             }
             PWMLOAD = 0b111; //Load all
         }
@@ -131,7 +141,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM1S1P1 = (uint16_t)(2048 + pulse);
+                PWM1S1P1 = (uint16_t) (2048 + pulse);
             }
             channel = settings.outputs[1].channel;
             if (channel != 0) {
@@ -146,7 +156,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM2S1P1 = (uint16_t)(2048 + pulse);
+                PWM2S1P1 = (uint16_t) (2048 + pulse);
             }
             channel = settings.outputs[2].channel;
             if (channel != 0) {
@@ -161,7 +171,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM3S1P1 = (uint16_t)(2048 + pulse);
+                PWM3S1P1 = (uint16_t) (2048 + pulse);
             }
             channel = settings.outputs[3].channel;
             if (channel != 0) {
@@ -176,7 +186,7 @@ void main(void) {
                 } else if (pulse > 2047) {
                     pulse = 2047;
                 }
-                PWM3S1P2 = (uint16_t)(2048 + pulse);
+                PWM3S1P2 = (uint16_t) (2048 + pulse);
             }
             PWMLOAD = 0b111; //Load all
             ++packetCount;
@@ -187,6 +197,7 @@ void main(void) {
                 packetCount = 0;
             }
         }
+        CLRWDT();
     }
 }
 
@@ -194,6 +205,10 @@ void lockPPS(void) {
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
     PPSLOCKbits.PPSLOCKED = 1;
+    //Lock priority for good while were at it
+    PRLOCK = 0x55;
+    PRLOCK = 0xAA;
+    PRLOCKbits.PRLOCKED = 1;
 }
 
 void configInterrupts(void) {
