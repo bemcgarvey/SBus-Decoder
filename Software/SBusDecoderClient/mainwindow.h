@@ -5,10 +5,13 @@
 #include <QLabel>
 #include <QSerialPort>
 #include "sbus_settings.h"
+#include <memory>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
+
+using std::unique_ptr;
 
 class MainWindow : public QMainWindow
 {
@@ -23,7 +26,7 @@ private:
     QLabel *portLabel;
     QLabel *connectedLabel;
     QLabel *versionLabel;
-    QSerialPort *port;
+    unique_ptr<QSerialPort> port;
     enum {RX_IDLE, RX_VERSION, RX_SETTINGS, RX_ACK} rxState;
     enum {ACK = 0x06, NACK = 0x15};
     int bytesNeeded;
@@ -42,5 +45,6 @@ private slots:
     void on_writePushButton_clicked();
     void on_actionAbout_triggered();
     void on_passThrough_stateChanged(int arg1);
+    void rxTimeout(void);
 };
 #endif // MAINWINDOW_H

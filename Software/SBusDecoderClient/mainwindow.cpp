@@ -4,13 +4,11 @@
 #include <QSerialPortInfo>
 #include <QMessageBox>
 #include <QtDebug>
-#include <memory>
 #include "aboutdialog.h"
+#include <QTimer>
 
 //TODO add icons
 //TODO remove qDebugs
-//TODO change port to a unique_ptr???
-//TODO make read timeout so we can detect read error
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -28,11 +26,6 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
-    if (port != nullptr) {
-        port->close();
-        delete port;
-    }
-    port = nullptr;
     delete ui;
 }
 
@@ -98,11 +91,6 @@ void MainWindow::updatePortMenu()
     ui->menuPort->clear();
     if (portList.size() == 0) {
         ui->menuPort->addAction("No ports found");
-        if (port != nullptr) {
-            port->close();
-            delete port;
-        }
-        port = nullptr;
         portLabel->setText("    ");
         connectedLabel->setText("Not Connected");
         return;
@@ -119,12 +107,7 @@ void MainWindow::updatePortMenu()
 void MainWindow::comPortSelected()
 {
     QAction *action = dynamic_cast<QAction *>(sender());
-    if (port != nullptr) {
-        port->close();
-        delete port;
-        port = nullptr;
-    }
-    port = new QSerialPort(action->text(), this);
+    port.reset(new QSerialPort(action->text(), this));
     if (port->open(QIODevice::ReadWrite)) {
         port->setBaudRate(QSerialPort::Baud115200);
         port->setDataBits(QSerialPort::Data8);
@@ -136,10 +119,9 @@ void MainWindow::comPortSelected()
         ui->writePushButton->setEnabled(true);
         action->setChecked(true);
         port->clear(QSerialPort::AllDirections);  //clear out extra bytes from device power on
-        connect(port, &QSerialPort::readyRead, this, &MainWindow::onReadyRead);
+        connect(port.get(), &QSerialPort::readyRead, this, &MainWindow::onReadyRead);
     } else {
-        delete port;
-        port = nullptr;
+        port.release();
         portLabel->setText("    ");
         connectedLabel->setText("Not Connected");
         ui->readPushButton->setEnabled(false);
@@ -181,7 +163,7 @@ void MainWindow::onReadyRead()
                     rxState = RX_IDLE;
                     updateControls();
                 } else {
-                    QMessageBox::warning(this, "sBus Decoder", "Error reading device");
+                    QMessageBox::critical(this, "sBus Decoder", "Error reading device");
                 }
             }
             break;
@@ -194,7 +176,7 @@ void MainWindow::onReadyRead()
                 if (rxBuffer[0] == ACK) {
                     QMessageBox::information(this, "sBus Decoder", "Settings saved");
                 } else {
-                    QMessageBox::warning(this, "sBus Decoder", "An Error occurred while saving settings.");
+                    QMessageBox::critical(this, "sBus Decoder", "An Error occurred while saving settings.");
                 }
             }
             break;
@@ -216,6 +198,7 @@ void MainWindow::on_readPushButton_clicked()
     bytesNeeded = 2;
     bufferPos = rxBuffer;
     rxState = RX_VERSION;
+    QTimer::singleShot(500, this, &MainWindow::rxTimeout);
 }
 
 
@@ -237,6 +220,7 @@ void MainWindow::on_writePushButton_clicked()
     bytesNeeded = 1;
     bufferPos = rxBuffer;
     rxBuffer[0] = 0xff; //make sure there is not a left over ACK in the buffer
+    QTimer::singleShot(500, this, &MainWindow::rxTimeout);
 }
 
 
@@ -250,6 +234,14 @@ void MainWindow::on_actionAbout_triggered()
 void MainWindow::on_passThrough_stateChanged(int arg1)
 {
     ui->out4Channel->setCurrentIndex(0);
-        ui->output4Frame->setEnabled(!arg1);
+    ui->output4Frame->setEnabled(!arg1);
+}
+
+void MainWindow::rxTimeout()
+{
+    if (rxState == RX_VERSION || rxState == RX_SETTINGS || rxState == RX_ACK) {
+        rxState = RX_IDLE;
+        QMessageBox::critical(this, "sBus Decoder", "Communication timeout.  Operation failed");
+    }
 }
 
