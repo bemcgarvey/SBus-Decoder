@@ -31,8 +31,9 @@ enum {
 typedef struct {
     uint8_t requestedMode;
     struct {
-        uint8_t sbusPassthrough : 1;
-        uint8_t : 7;
+        uint8_t sbusPassthrough4 : 1;
+        uint8_t sbusPassthrough3 : 1;
+        uint8_t : 6;
     } options;
     struct {
         uint8_t channel;

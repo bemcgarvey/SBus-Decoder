@@ -18,7 +18,7 @@ enum {
 };
 
 //Option flags
-enum {SBUS_PASSTHROUGH = 0x01};
+enum {SBUS_PASSTHROUGH4 = 0x01, SBUS_PASSTHROUGH3 = 0x02};
 
 typedef struct {
     uint8_t requestedMode;

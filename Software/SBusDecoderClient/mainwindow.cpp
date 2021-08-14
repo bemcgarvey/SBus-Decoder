@@ -51,7 +51,8 @@ void MainWindow::updateControls()
     ui->out3subTrim->setValue(settings.outputs[2].subTrim);
     ui->out4Reverse->setChecked(settings.outputs[3].reverse);
     ui->out4subTrim->setValue(settings.outputs[3].subTrim);
-    ui->passThrough->setChecked(settings.options & SBUS_PASSTHROUGH);
+    ui->passThrough4->setChecked(settings.options & SBUS_PASSTHROUGH4);
+    ui->passThrough3->setChecked(settings.options & SBUS_PASSTHROUGH3);
 }
 
 void MainWindow::updateSettings()
@@ -77,10 +78,15 @@ void MainWindow::updateSettings()
     settings.outputs[2].subTrim = ui->out3subTrim->value();
     settings.outputs[3].reverse = ui->out4Reverse->isChecked();
     settings.outputs[3].subTrim = ui->out4subTrim->value();
-    if (ui->passThrough->isChecked()) {
-        settings.options |= SBUS_PASSTHROUGH;
+    if (ui->passThrough4->isChecked()) {
+        settings.options |= SBUS_PASSTHROUGH4;
     } else {
-        settings.options &= ~SBUS_PASSTHROUGH;
+        settings.options &= ~SBUS_PASSTHROUGH4;
+    }
+    if (ui->passThrough3->isChecked()) {
+        settings.options |= SBUS_PASSTHROUGH3;
+    } else {
+        settings.options &= ~SBUS_PASSTHROUGH3;
     }
 }
 
@@ -230,17 +236,25 @@ void MainWindow::on_actionAbout_triggered()
 }
 
 
-void MainWindow::on_passThrough_stateChanged(int arg1)
-{
-    ui->out4Channel->setCurrentIndex(0);
-    ui->output4Frame->setEnabled(!arg1);
-}
-
 void MainWindow::rxTimeout()
 {
     if (rxState == RX_VERSION || rxState == RX_SETTINGS || rxState == RX_ACK) {
         rxState = RX_IDLE;
         QMessageBox::critical(this, "sBus Decoder", "Communication timeout.  Operation failed");
     }
+}
+
+
+void MainWindow::on_passThrough3_stateChanged(int arg1)
+{
+    ui->out3Channel->setCurrentIndex(0);
+    ui->output3Frame->setEnabled(!arg1);
+}
+
+
+void MainWindow::on_passThrough4_stateChanged(int arg1)
+{
+    ui->out4Channel->setCurrentIndex(0);
+    ui->output4Frame->setEnabled(!arg1);
 }
 

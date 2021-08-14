@@ -37,9 +37,14 @@ void initSBus(void) {
     U1BRG = 159; //100000 baud
     IPR4bits.U1RXIP = 0;
     PIE4bits.U1RXIE = 1;
-    if (settings.options.sbusPassthrough) {
+    if (settings.options.sbusPassthrough3 || settings.options.sbusPassthrough4) {
         CLCIN0PPS = 0b010011; //RC3
-        RC1PPS = 0x01; //CLC1OUT
+        if (settings.options.sbusPassthrough4) {
+            RC1PPS = 0x01; //CLC1OUT
+        }
+        if (settings.options.sbusPassthrough3) {
+            RC0PPS = 0x01; //CLC1OUT
+        }
         CLCSELECT = 0;
         CLCnCONbits.EN = 0;
         CLCnCONbits.MODE = 0b010; //4-input AND
@@ -47,8 +52,8 @@ void initSBus(void) {
         CLCnSEL0 = 0;
         CLCnSEL1 = 0;
         CLCnSEL2 = 0;
-        CLCnSEL3 = 0;  //CLCIN0PPS
-        CLCnGLS0 = 0x02;  //Gate input 1 true
+        CLCnSEL3 = 0; //CLCIN0PPS
+        CLCnGLS0 = 0x02; //Gate input 1 true
         CLCnGLS1 = 0; //no inputs - makes true because of polarity
         CLCnGLS2 = 0;
         CLCnGLS3 = 0;
@@ -147,5 +152,5 @@ int16_t decodeChannel(uint8_t channel) {
         default: pwm = 0;
     }
     pwm &= 0x7ff;
-    return (int16_t)pwm;
+    return (int16_t) pwm;
 }

@@ -44,7 +44,8 @@ private slots:
     void on_out3FrameRate_currentIndexChanged(int index);
     void on_writePushButton_clicked();
     void on_actionAbout_triggered();
-    void on_passThrough_stateChanged(int arg1);
     void rxTimeout(void);
+    void on_passThrough3_stateChanged(int arg1);
+    void on_passThrough4_stateChanged(int arg1);
 };
 #endif // MAINWINDOW_H

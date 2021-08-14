@@ -16,7 +16,7 @@
 #define EE_START_ADDRESS 0
 
 Settings settings = {
-    0, 0,
+    0, {0, 0},
     {{0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0},
@@ -24,7 +24,7 @@ Settings settings = {
 };
 
 const Settings defaultSettings = {
-    SBUS_DECODER, 0,
+    SBUS_DECODER, {0, 0},
     {{0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0},

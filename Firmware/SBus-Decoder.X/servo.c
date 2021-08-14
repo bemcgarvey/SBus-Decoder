@@ -18,8 +18,10 @@ uint16_t calculatePeriod(uint8_t frameRate);
 void initServos(void) {
     RA0PPS = 0x0a; //PWM1S1P1_OUT
     RA1PPS = 0x0c; //PWM2S1P1_OUT
-    RC0PPS = 0x0e; //PWM3S1P1_OUT
-    if (!settings.options.sbusPassthrough) {
+    if (!settings.options.sbusPassthrough3) {
+        RC0PPS = 0x0e; //PWM3S1P1_OUT
+    }
+    if (!settings.options.sbusPassthrough4) {
         RC1PPS = 0x0f; //PWM3S1P2_OUT
     }
     //Setup NCO for 2048000 MHz
