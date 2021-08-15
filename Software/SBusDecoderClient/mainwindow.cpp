@@ -21,6 +21,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->addWidget(connectedLabel);
     ui->statusbar->addPermanentWidget(versionLabel);
     connect(ui->menuPort, &QMenu::aboutToShow, this, &MainWindow::updatePortMenu);
+    //qDebug() << sizeof(Settings);
 }
 
 MainWindow::~MainWindow()
@@ -31,6 +32,7 @@ MainWindow::~MainWindow()
 void MainWindow::updateControls()
 {
     ui->tabWidget->setCurrentIndex(settings.requestedMode - 1);
+    //sBus tab
     ui->out1Channel->setCurrentIndex(settings.outputs[0].channel);
     ui->out1FrameRate->setCurrentIndex(settings.outputs[0].frameRate - 1);
     ui->out1Failsafe->setCurrentIndex(settings.outputs[0].failsafeMode - 1);
@@ -52,11 +54,25 @@ void MainWindow::updateControls()
     ui->out4Reverse->setChecked(settings.outputs[3].reverse);
     ui->out4subTrim->setValue(settings.outputs[3].subTrim);
     ui->passThrough4->setChecked(settings.options & SBUS_PASSTHROUGH4);
+    ui->seqPassThrough->setChecked(settings.options & SBUS_PASSTHROUGH4);
     ui->passThrough3->setChecked(settings.options & SBUS_PASSTHROUGH3);
+    //Sequencer tab
+    if (settings.seqInputType == PWM) {
+        ui->pwmInputRadioButton->setChecked(true);
+        ui->sBusInputRadioButton->setChecked(false);
+        ui->sbusOptionsFrame->setEnabled(false);
+    } else {
+        ui->pwmInputRadioButton->setChecked(false);
+        ui->sBusInputRadioButton->setChecked(true);
+        ui->sbusOptionsFrame->setEnabled(true);
+    }
+    ui->sBusInputChannel->setCurrentIndex(settings.seqSbusChannel);
+    //setup lists
 }
 
 void MainWindow::updateSettings()
 {
+    //sBus tab
     settings.requestedMode = ui->tabWidget->currentIndex() + 1;
     settings.outputs[0].channel = ui->out1Channel->currentIndex();
     settings.outputs[0].frameRate = ui->out1FrameRate->currentIndex() + 1;
@@ -78,7 +94,7 @@ void MainWindow::updateSettings()
     settings.outputs[2].subTrim = ui->out3subTrim->value();
     settings.outputs[3].reverse = ui->out4Reverse->isChecked();
     settings.outputs[3].subTrim = ui->out4subTrim->value();
-    if (ui->passThrough4->isChecked()) {
+    if (ui->passThrough4->isChecked() || ui->seqPassThrough->isChecked()) {
         settings.options |= SBUS_PASSTHROUGH4;
     } else {
         settings.options &= ~SBUS_PASSTHROUGH4;
@@ -88,6 +104,14 @@ void MainWindow::updateSettings()
     } else {
         settings.options &= ~SBUS_PASSTHROUGH3;
     }
+    //Sequencer tab
+    if (ui->pwmInputRadioButton->isChecked()) {
+        settings.seqInputType = PWM;
+    } else {
+        settings.seqInputType = SBUS;
+    }
+    settings.seqSbusChannel = ui->sBusInputChannel->currentIndex();
+    //get lists
 }
 
 void MainWindow::updatePortMenu()
@@ -225,7 +249,7 @@ void MainWindow::on_writePushButton_clicked()
     bytesNeeded = 1;
     bufferPos = rxBuffer;
     rxBuffer[0] = 0xff; //make sure there is not a left over ACK in the buffer
-    QTimer::singleShot(500, this, &MainWindow::rxTimeout);
+    QTimer::singleShot(3000, this, &MainWindow::rxTimeout);
 }
 
 
@@ -256,5 +280,33 @@ void MainWindow::on_passThrough4_stateChanged(int arg1)
 {
     ui->out4Channel->setCurrentIndex(0);
     ui->output4Frame->setEnabled(!arg1);
+    if (arg1 != ui->seqPassThrough->isChecked()) {
+        ui->seqPassThrough->setChecked(arg1);
+    }
+}
+
+
+void MainWindow::on_pwmInputRadioButton_clicked(bool checked)
+{
+    ui->sbusOptionsFrame->setEnabled(!checked);
+    if (checked) {
+        ui->sBusInputChannel->setCurrentIndex(0);
+        ui->seqPassThrough->setChecked(false);
+    }
+}
+
+
+void MainWindow::on_sBusInputRadioButton_clicked(bool checked)
+{
+    ui->sbusOptionsFrame->setEnabled(checked);
+}
+
+
+
+void MainWindow::on_seqPassThrough_stateChanged(int arg1)
+{
+    if (arg1 != ui->passThrough4->isChecked()) {
+        ui->passThrough4->setChecked(arg1);
+    }
 }
 

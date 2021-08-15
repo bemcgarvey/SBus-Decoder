@@ -22,9 +22,6 @@ void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
-//TODO enable WDT
-//TODO enable BOR??
-//TODO check configuration bits. 
 //TODO Use PMD to turn off unused modules
 //TODO Final warning check
 
@@ -50,8 +47,10 @@ void main(void) {
     if (mode != WDT) {
         if (!loadSettings()) {
             if (!setDefaultSettings()) {
-                ledOn();
-                while (1);
+                while (1) {
+                    ledToggle();
+                    __delay_ms(200);
+                }
             }
         }
         if (detectSerial()) {

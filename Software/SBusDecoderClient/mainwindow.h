@@ -47,5 +47,8 @@ private slots:
     void rxTimeout(void);
     void on_passThrough3_stateChanged(int arg1);
     void on_passThrough4_stateChanged(int arg1);
+    void on_pwmInputRadioButton_clicked(bool checked);
+    void on_sBusInputRadioButton_clicked(bool checked);
+    void on_seqPassThrough_stateChanged(int arg1);
 };
 #endif // MAINWINDOW_H
