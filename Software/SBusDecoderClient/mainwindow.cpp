@@ -6,8 +6,15 @@
 #include <QtDebug>
 #include "aboutdialog.h"
 #include <QTimer>
+#include "stepdialog.h"
 
 //TODO remove qDebugs
+//TODO create class for sequence steps. 2 constructors default and from step struct
+//     method to return a struct
+//     use list to hold them and manage list widgets
+//     add up/down buttons to move events in list?
+//     copy to/from list on load/save settings
+//TODO layout step dialog
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -67,7 +74,15 @@ void MainWindow::updateControls()
         ui->sbusOptionsFrame->setEnabled(true);
     }
     ui->sBusInputChannel->setCurrentIndex(settings.seqSbusChannel);
-    //setup lists
+    lowSteps.clear();
+    for (int i = 0; i < settings.numLowSteps; ++i) {
+        lowSteps.append(settings.lowSteps[i]);
+    }
+    highSteps.clear();
+    for (int i = 0; i < settings.numHighSteps; ++i) {
+        highSteps.append(settings.highSteps[i]);
+    }
+    updateSequenceLists();
 }
 
 void MainWindow::updateSettings()
@@ -111,7 +126,25 @@ void MainWindow::updateSettings()
         settings.seqInputType = SBUS;
     }
     settings.seqSbusChannel = ui->sBusInputChannel->currentIndex();
-    //get lists
+    settings.numLowSteps = lowSteps.size();
+    for (int i = 0; i < lowSteps.size(); ++i) {
+        settings.lowSteps[i] = lowSteps[i];
+    }
+    settings.numHighSteps = highSteps.size();
+    for (int i = 0; i < highSteps.size(); ++i) {
+        settings.highSteps[i] = highSteps[i];
+    }
+}
+
+QString MainWindow::itemString(const SequenceStep &step) const
+{
+    QString str;
+    if (step.type == SERVO) {
+        str = QString("Out %1 to %2 in %3s").arg(step.output).arg(step.position).arg(step.time / 10.0);
+    } else {
+        str = QString("Delay %1s").arg(step.time / 10.0);
+    }
+    return str;
 }
 
 void MainWindow::updatePortMenu()
@@ -307,6 +340,60 @@ void MainWindow::on_seqPassThrough_stateChanged(int arg1)
 {
     if (arg1 != ui->passThrough4->isChecked()) {
         ui->passThrough4->setChecked(arg1);
+    }
+}
+
+
+void MainWindow::on_lowPlusButton_clicked()
+{
+    if (lowSteps.size() < MAX_SEQUENCE_STEPS) {
+        SequenceStep step;
+        step.output = 0;
+        step.type = SERVO;
+        step.position = 0;
+        step.time = 0;
+        lowSteps.append(step);
+        updateSequenceLists();
+        ui->lowSequenceList->setCurrentRow(lowSteps.size() - 1);
+        int stepNum = ui->lowSequenceList->currentRow();
+        unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[stepNum]));
+        if (dlg->exec() == QDialog::Rejected) {
+            lowSteps.removeLast();
+        }
+        updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_lowSequenceList_itemDoubleClicked(QListWidgetItem *item)
+{
+    Q_UNUSED(item);
+    int stepNum = ui->lowSequenceList->currentRow();
+    unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[stepNum]));
+    if (dlg->exec() == QDialog::Accepted) {
+        updateSequenceLists();
+    }
+}
+
+void MainWindow::updateSequenceLists()
+{
+    ui->lowSequenceList->clear();
+    for (auto &&i : lowSteps) {
+        ui->lowSequenceList->addItem(itemString(i));
+    }
+    ui->highSequenceList->clear();
+    for (auto &&i : highSteps) {
+        ui->highSequenceList->addItem(itemString(i));
+    }
+}
+
+
+void MainWindow::on_lowXButton_clicked()
+{
+    int stepNum = ui->lowSequenceList->currentRow();
+    if (stepNum >= 0) {
+        lowSteps.removeAt(stepNum);
+        updateSequenceLists();
     }
 }
 

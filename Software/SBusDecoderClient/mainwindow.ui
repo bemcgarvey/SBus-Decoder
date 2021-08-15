@@ -31,7 +31,7 @@
        <enum>QTabWidget::North</enum>
       </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>0</number>
       </property>
       <widget class="QWidget" name="sBusTab">
        <attribute name="title">
@@ -1197,33 +1197,8 @@
                </size>
               </property>
               <property name="selectionMode">
-               <enum>QAbstractItemView::MultiSelection</enum>
+               <enum>QAbstractItemView::SingleSelection</enum>
               </property>
-              <item>
-               <property name="text">
-                <string>Out1 - High</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Delay 1.2 s</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Out 2 - High</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Delay 3 s</string>
-               </property>
-              </item>
-              <item>
-               <property name="text">
-                <string>Out 1 - Low</string>
-               </property>
-              </item>
              </widget>
             </item>
             <item>
@@ -1236,6 +1211,28 @@
                 <property name="icon">
                  <iconset resource="resources.qrc">
                   <normaloff>:/images/plus.png</normaloff>:/images/plus.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="lowUpButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/up_arrow.png</normaloff>:/images/up_arrow.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="lowDownButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/down_arrow.png</normaloff>:/images/down_arrow.png</iconset>
                 </property>
                </widget>
               </item>
@@ -1351,6 +1348,28 @@
                 <property name="icon">
                  <iconset resource="resources.qrc">
                   <normaloff>:/images/plus.png</normaloff>:/images/plus.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="highUpButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/up_arrow.png</normaloff>:/images/up_arrow.png</iconset>
+                </property>
+               </widget>
+              </item>
+              <item>
+               <widget class="QToolButton" name="highDownButton">
+                <property name="text">
+                 <string>...</string>
+                </property>
+                <property name="icon">
+                 <iconset resource="resources.qrc">
+                  <normaloff>:/images/down_arrow.png</normaloff>:/images/down_arrow.png</iconset>
                 </property>
                </widget>
               </item>
