@@ -59,5 +59,14 @@ private slots:
     void on_lowSequenceList_itemDoubleClicked(QListWidgetItem *item);
     void updateSequenceLists(void);
     void on_lowXButton_clicked();
+    void on_highPlusButton_clicked();
+    void on_highXButton_clicked();
+    void on_highSequenceList_itemDoubleClicked(QListWidgetItem *item);
+    void on_lowUpButton_clicked();
+    void on_lowDownButton_clicked();
+    void on_rightButton_clicked();
+    void on_leftButton_clicked();
+    void on_highUpButton_clicked();
+    void on_highDownButton_clicked();
 };
 #endif // MAINWINDOW_H

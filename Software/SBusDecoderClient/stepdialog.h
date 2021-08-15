@@ -21,6 +21,10 @@ private slots:
 
     void on_buttonBox_accepted();
 
+    void on_servoStep_clicked(bool checked);
+
+    void on_delayStep_clicked(bool checked);
+
 private:
     Ui::StepDialog *ui;
     SequenceStep &step;

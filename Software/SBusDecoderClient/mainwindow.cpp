@@ -9,12 +9,6 @@
 #include "stepdialog.h"
 
 //TODO remove qDebugs
-//TODO create class for sequence steps. 2 constructors default and from step struct
-//     method to return a struct
-//     use list to hold them and manage list widgets
-//     add up/down buttons to move events in list?
-//     copy to/from list on load/save settings
-//TODO layout step dialog
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -348,7 +342,7 @@ void MainWindow::on_lowPlusButton_clicked()
 {
     if (lowSteps.size() < MAX_SEQUENCE_STEPS) {
         SequenceStep step;
-        step.output = 0;
+        step.output = 1;
         step.type = SERVO;
         step.position = 0;
         step.time = 0;
@@ -394,6 +388,112 @@ void MainWindow::on_lowXButton_clicked()
     if (stepNum >= 0) {
         lowSteps.removeAt(stepNum);
         updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_highPlusButton_clicked()
+{
+    if (highSteps.size() < MAX_SEQUENCE_STEPS) {
+        SequenceStep step;
+        step.output = 1;
+        step.type = SERVO;
+        step.position = 0;
+        step.time = 0;
+        highSteps.append(step);
+        updateSequenceLists();
+        ui->highSequenceList->setCurrentRow(highSteps.size() - 1);
+        int stepNum = ui->highSequenceList->currentRow();
+        unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[stepNum]));
+        if (dlg->exec() == QDialog::Rejected) {
+            highSteps.removeLast();
+        }
+        updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_highXButton_clicked()
+{
+    int stepNum = ui->highSequenceList->currentRow();
+    if (stepNum >= 0) {
+        highSteps.removeAt(stepNum);
+        updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_highSequenceList_itemDoubleClicked(QListWidgetItem *item)
+{
+    Q_UNUSED(item);
+    int stepNum = ui->highSequenceList->currentRow();
+    unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[stepNum]));
+    if (dlg->exec() == QDialog::Accepted) {
+        updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_lowUpButton_clicked()
+{
+    int pos = ui->lowSequenceList->currentRow();
+    if (pos > 0) {
+        lowSteps.swapItemsAt(pos, pos - 1);
+        updateSequenceLists();
+        ui->lowSequenceList->setCurrentRow(pos - 1);
+    }
+}
+
+
+void MainWindow::on_lowDownButton_clicked()
+{
+    int pos = ui->lowSequenceList->currentRow();
+    if (pos >= 0 && pos < lowSteps.size() - 1) {
+        lowSteps.swapItemsAt(pos, pos + 1);
+        updateSequenceLists();
+        ui->lowSequenceList->setCurrentRow(pos + 1);
+    }
+}
+
+
+void MainWindow::on_rightButton_clicked()
+{
+    int pos = ui->lowSequenceList->currentRow();
+    if (pos >= 0 && highSteps.size() < MAX_SEQUENCE_STEPS) {
+        highSteps.append(lowSteps[pos]);
+        updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_leftButton_clicked()
+{
+    int pos = ui->highSequenceList->currentRow();
+    if (pos >= 0 && lowSteps.size() < MAX_SEQUENCE_STEPS) {
+        lowSteps.append(highSteps[pos]);
+        updateSequenceLists();
+    }
+}
+
+
+void MainWindow::on_highUpButton_clicked()
+{
+    int pos = ui->highSequenceList->currentRow();
+    if (pos > 0) {
+        highSteps.swapItemsAt(pos, pos - 1);
+        updateSequenceLists();
+        ui->highSequenceList->setCurrentRow(pos - 1);
+    }
+}
+
+
+void MainWindow::on_highDownButton_clicked()
+{
+    int pos = ui->highSequenceList->currentRow();
+    if (pos >= 0 && pos < highSteps.size() - 1) {
+        highSteps.swapItemsAt(pos, pos + 1);
+        updateSequenceLists();
+        ui->highSequenceList->setCurrentRow(pos + 1);
     }
 }
 
