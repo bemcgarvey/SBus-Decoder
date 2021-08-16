@@ -13,6 +13,7 @@
 
 void initSbusServos(void);
 void initSequencerServos(void);
+void setServo(uint8_t output, uint16_t value);
 
 #endif	/* SERVO_H */
 

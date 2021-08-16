@@ -92,6 +92,21 @@ void initSequencerServos(void) {
     PWMEN = enable; //Turn on active outputs
 }
 
+void setServo(uint8_t output, uint16_t value) {
+    value += 2048;
+    switch (output) {
+        case 1: PWM1S1P1 = value;
+        break;
+        case 2: PWM2S1P1 = value;
+        break;
+        case 3: PWM3S1P1 = value;
+        break;
+        case 4: PWM3S1P2 = value;
+        break;
+    }
+    PWMLOAD = 0b111; //Load all
+}
+
 uint16_t calculatePeriod(uint8_t frameRate) {
     switch (frameRate) {
         case FRAME_50HZ: return 40960;
