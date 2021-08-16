@@ -9,11 +9,11 @@
 /////////////////////////////////////////////////////
 
 #include <xc.h>
-
 #include "sbus.h"
 #include "timers.h"
 #include "led.h"
 #include "settings.h"
+#include "servo.h"
 
 #define SBUS_HEADER 0x0f
 #define SBUS_FOOTER 0x00
@@ -24,7 +24,7 @@ volatile uint8_t bytesReceived = 0;
 volatile SBusPacket rxPacket;
 bool failsafeEngaged = 0;
 
-void initSBus(void) {
+void initSBusInput(void) {
     U1CON1bits.ON = 0;
     TRISCbits.TRISC3 = 1;
     U1RXPPS = 0b010011; //RC3
@@ -61,6 +61,12 @@ void initSBus(void) {
         CLCnCONbits.EN = 1;
     }
     U1CON1bits.ON = 1;
+    initTimer2();
+}
+
+void initSBusDecoder(void) {
+    initSbusServos();
+    initSBusInput();
 }
 
 void sBusTasks(void) {

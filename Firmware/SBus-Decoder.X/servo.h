@@ -12,6 +12,7 @@
 #define	SERVO_H
 
 void initSbusServos(void);
+void initSequencerServos(void);
 
 #endif	/* SERVO_H */
 

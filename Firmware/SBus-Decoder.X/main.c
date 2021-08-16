@@ -17,6 +17,7 @@
 #include "timers.h"
 #include "servo.h"
 #include "settings.h"
+#include "sequencer.h"
 
 void lockPPS(void);
 void configInterrupts(void);
@@ -64,20 +65,20 @@ void main(void) {
     configPMD();
     configInterrupts();
     if (mode == SBUS_DECODER) {
-        initSbusServos();
-        initSBus();
-        initTimer2();
+        initSBusDecoder();
+    } else if (mode == SERVO_SEQUENCER) {
+        initSequencer();
     }
     lockPPS();
     WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
-    WDTCON0bits.SEN = 1;
+    //WDTCON0bits.SEN = 1;  //TODO re-enable WDT after testing sequencer
     while (1) {
         switch (mode) {
             case SBUS_DECODER: 
                 sBusTasks();
                 break;
             case SERVO_SEQUENCER:
-                //sequncerTasks();
+                sequencerTasks();
                 break;
         }
         CLRWDT();

@@ -10,6 +10,7 @@
 
 //TODO remove qDebugs
 //TODO make consistent MessageBox titles.  Use QApplication::ApplicationName?
+//TODO make sure sbusPassthrough3 is off when in sequencer mode
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
