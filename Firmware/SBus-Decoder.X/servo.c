@@ -15,7 +15,7 @@
 
 uint16_t calculatePeriod(uint8_t frameRate);
 
-void initServos(void) {
+void initSbusServos(void) {
     RA0PPS = 0x0a; //PWM1S1P1_OUT
     RA1PPS = 0x0c; //PWM2S1P1_OUT
     if (!settings.options.sbusPassthrough3) {

@@ -22,6 +22,7 @@ volatile bool receivingPacket = false;
 volatile bool packetUpdate = false;
 volatile uint8_t bytesReceived = 0;
 volatile SBusPacket rxPacket;
+bool failsafeEngaged = 0;
 
 void initSBus(void) {
     U1CON1bits.ON = 0;
@@ -60,6 +61,133 @@ void initSBus(void) {
         CLCnCONbits.EN = 1;
     }
     U1CON1bits.ON = 1;
+}
+
+void sBusTasks(void) {
+    static int packetCount = 0;
+    int16_t pulse;
+    if (!failsafeEngaged && sBusPacketTicks == 0) {
+        failsafeEngaged = true;
+        ledOff();
+        if (settings.outputs[0].failsafeMode == FAIL_OFF) {
+            PWM1S1P1 = 0;
+        } else if (settings.outputs[0].failsafeMode == FAIL_NEUTRAL) {
+            pulse = 1023 + settings.outputs[0].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM1S1P1 = (uint16_t) (2048 + pulse);
+        }
+        if (settings.outputs[1].failsafeMode == FAIL_OFF) {
+            PWM2S1P1 = 0;
+        } else if (settings.outputs[1].failsafeMode == FAIL_NEUTRAL) {
+            pulse = 1023 + settings.outputs[1].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM2S1P1 = (uint16_t) (2048 + pulse);
+        }
+        if (settings.outputs[2].failsafeMode == FAIL_OFF) {
+            PWM3S1P1 = 0;
+        } else if (settings.outputs[2].failsafeMode == FAIL_NEUTRAL) {
+            pulse = 1023 + settings.outputs[2].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM3S1P1 = (uint16_t) (2048 + pulse);
+        }
+        if (settings.outputs[3].failsafeMode == FAIL_OFF) {
+            PWM3S1P2 = 0;
+        } else if (settings.outputs[3].failsafeMode == FAIL_NEUTRAL) {
+            pulse = 1023 + settings.outputs[3].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM3S1P2 = (uint16_t) (2048 + pulse);
+        }
+        PWMLOAD = 0b111; //Load all
+    }
+    if (packetUpdate) {
+        packetUpdate = false;
+        failsafeEngaged = false;
+        uint8_t channel;
+        channel = settings.outputs[0].channel;
+        if (channel != 0) {
+            if (settings.outputs[0].reverse) {
+                pulse = 2047 - decodeChannel(channel);
+            } else {
+                pulse = decodeChannel(channel);
+            }
+            pulse += settings.outputs[0].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM1S1P1 = (uint16_t) (2048 + pulse);
+        }
+        channel = settings.outputs[1].channel;
+        if (channel != 0) {
+            if (settings.outputs[1].reverse) {
+                pulse = 2047 - decodeChannel(channel);
+            } else {
+                pulse = decodeChannel(channel);
+            }
+            pulse += settings.outputs[1].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM2S1P1 = (uint16_t) (2048 + pulse);
+        }
+        channel = settings.outputs[2].channel;
+        if (channel != 0) {
+            if (settings.outputs[2].reverse) {
+                pulse = 2047 - decodeChannel(channel);
+            } else {
+                pulse = decodeChannel(channel);
+            }
+            pulse += settings.outputs[2].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM3S1P1 = (uint16_t) (2048 + pulse);
+        }
+        channel = settings.outputs[3].channel;
+        if (channel != 0) {
+            if (settings.outputs[3].reverse) {
+                pulse = 2047 - decodeChannel(channel);
+            } else {
+                pulse = decodeChannel(channel);
+            }
+            pulse += settings.outputs[3].subTrim;
+            if (pulse < 0) {
+                pulse = 0;
+            } else if (pulse > 2047) {
+                pulse = 2047;
+            }
+            PWM3S1P2 = (uint16_t) (2048 + pulse);
+        }
+        PWMLOAD = 0b111; //Load all
+        ++packetCount;
+        if (packetCount == 300) {
+            ledOn();
+        } else if (packetCount == 305) {
+            ledOff();
+            packetCount = 0;
+        }
+    }
 }
 
 void __interrupt(irq(U1RX), low_priority, base(8)) U1RXISR(void) {

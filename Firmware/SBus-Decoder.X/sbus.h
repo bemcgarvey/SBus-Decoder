@@ -36,6 +36,7 @@ extern volatile bool packetUpdate;
 
 void initSBus(void);
 int16_t decodeChannel(uint8_t channel);
+void sBusTasks(void);
 
 #endif	/* SBUS_H */
 

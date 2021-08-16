@@ -11,7 +11,7 @@
 #ifndef SERVO_H
 #define	SERVO_H
 
-void initServos(void);
+void initSbusServos(void);
 
 #endif	/* SERVO_H */
 
