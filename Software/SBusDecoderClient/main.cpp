@@ -9,7 +9,7 @@ int main(int argc, char *argv[])
     QApplication::setStyle(QStyleFactory::create("Fusion"));
     QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setOrganizationName("QES");
-    QApplication::setApplicationName("SBus Decoder");
+    QApplication::setApplicationName("sBus Decoder");
     QApplication a(argc, argv);
     MainWindow w;
     QScreen *screen = QGuiApplication::primaryScreen();

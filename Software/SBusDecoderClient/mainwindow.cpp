@@ -7,16 +7,16 @@
 #include "aboutdialog.h"
 #include <QTimer>
 #include "stepdialog.h"
+#include <cmath>
 
 //TODO remove qDebugs
-//TODO make consistent MessageBox titles.  Use QApplication::ApplicationName?
-//TODO make sure sbusPassthrough3 is off when in sequencer mode
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), port(nullptr)
 {
     ui->setupUi(this);
+    setWindowTitle(QApplication::applicationName());
     portLabel = new QLabel("    ");
     connectedLabel = new QLabel("Not Connected");
     versionLabel = new QLabel("");
@@ -136,7 +136,10 @@ QString MainWindow::itemString(const SequenceStep &step) const
 {
     QString str;
     if (step.type == SERVO) {
-        str = QString("Out %1 to %2 in %3s").arg(step.output).arg(step.position).arg(step.time / 10.0);
+        str = QString("Output %1 to %2% in %3s")
+                .arg(step.output)
+                .arg(round((step.position - 1024) * (150.0 / 1024.0)))
+                .arg(step.time / 10.0);
     } else {
         str = QString("Delay %1s").arg(step.time / 10.0);
     }
@@ -221,8 +224,10 @@ void MainWindow::onReadyRead()
                     rxState = RX_IDLE;
                     updateControls();
                 } else {
-                    QMessageBox::critical(this, "sBus Decoder", "Error reading device");
+                    QMessageBox::critical(this, QApplication::applicationName(), "Error reading device");
                 }
+                ui->readPushButton->setEnabled(true);
+                ui->writePushButton->setEnabled(true);
             }
             break;
         case RX_ACK:
@@ -232,10 +237,12 @@ void MainWindow::onReadyRead()
             if (bytesNeeded == 0) {
                 rxState = RX_IDLE;
                 if (rxBuffer[0] == ACK) {
-                    QMessageBox::information(this, "sBus Decoder", "Settings saved");
+                    QMessageBox::information(this, QApplication::applicationName(), "Settings saved");
                 } else {
-                    QMessageBox::critical(this, "sBus Decoder", "An Error occurred while saving settings.");
+                    QMessageBox::critical(this, QApplication::applicationName(), "An Error occurred while saving settings.");
                 }
+                ui->readPushButton->setEnabled(true);
+                ui->writePushButton->setEnabled(true);
             }
             break;
         }
@@ -257,6 +264,8 @@ void MainWindow::on_readPushButton_clicked()
     bufferPos = rxBuffer;
     rxState = RX_VERSION;
     QTimer::singleShot(500, this, &MainWindow::rxTimeout);
+    ui->readPushButton->setEnabled(false);
+    ui->writePushButton->setEnabled(false);
 }
 
 
@@ -279,6 +288,8 @@ void MainWindow::on_writePushButton_clicked()
     bufferPos = rxBuffer;
     rxBuffer[0] = 0xff; //make sure there is not a left over ACK in the buffer
     QTimer::singleShot(3000, this, &MainWindow::rxTimeout);
+    ui->readPushButton->setEnabled(false);
+    ui->writePushButton->setEnabled(false);
 }
 
 
@@ -293,7 +304,9 @@ void MainWindow::rxTimeout()
 {
     if (rxState == RX_VERSION || rxState == RX_SETTINGS || rxState == RX_ACK) {
         rxState = RX_IDLE;
-        QMessageBox::critical(this, "sBus Decoder", "Communication timeout.  Operation failed");
+        QMessageBox::critical(this, QApplication::applicationName(), "Communication timeout.  Operation failed");
+        ui->readPushButton->setEnabled(true);
+        ui->writePushButton->setEnabled(true);
     }
 }
 
@@ -496,6 +509,14 @@ void MainWindow::on_highDownButton_clicked()
         highSteps.swapItemsAt(pos, pos + 1);
         updateSequenceLists();
         ui->highSequenceList->setCurrentRow(pos + 1);
+    }
+}
+
+
+void MainWindow::on_tabWidget_currentChanged(int index)
+{
+    if (index == 1) {
+        ui->passThrough3->setChecked(false);
     }
 }
 

@@ -68,5 +68,6 @@ private slots:
     void on_leftButton_clicked();
     void on_highUpButton_clicked();
     void on_highDownButton_clicked();
+    void on_tabWidget_currentChanged(int index);
 };
 #endif // MAINWINDOW_H

@@ -40,7 +40,7 @@ void StepDialog::on_StepDialog_accepted()
 void StepDialog::on_buttonBox_accepted()
 {
     if (ui->servoStep->isChecked() && ui->output->currentIndex() == 0) {
-        QMessageBox::warning(this, "sBus Decoder", "Please select an output servo");
+        QMessageBox::warning(this, QApplication::applicationName(), "Please select an output servo");
         return;
     } else {
         accept();
