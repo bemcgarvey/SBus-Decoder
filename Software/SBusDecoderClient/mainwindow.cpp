@@ -9,6 +9,7 @@
 #include "stepdialog.h"
 
 //TODO remove qDebugs
+//TODO make consistent MessageBox titles.  Use QApplication::ApplicationName?
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
