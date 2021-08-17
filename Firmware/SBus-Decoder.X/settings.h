@@ -41,7 +41,7 @@ enum SequencerInputType {
 typedef struct {
     uint8_t type;
     uint8_t output;
-    uint16_t position;
+    int16_t position;
     uint16_t time;
 } SequenceStep;
 

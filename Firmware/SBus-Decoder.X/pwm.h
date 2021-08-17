@@ -8,7 +8,7 @@
 #ifndef PWM_H
 #define	PWM_H
 
-enum {PULSE_LOW = 1250 * 2, PULSE_HIGH = 1750 * 2};  //TODO adjust these as needed
+enum {PULSE_LOW = 1250 * 2, PULSE_HIGH = 1750 * 2};
 
 void initPWMinput(void);
 

@@ -17,7 +17,7 @@
 #define SBUS_NUM_CHANNELS   16
 #define SBUS_TIMEOUT        100  //time in ms before failsafe
 
-enum {SBUS_LOW = 512, SBUS_HIGH = 1536}; //TODO adjust these
+enum {SBUS_LOW = 512, SBUS_HIGH = 1536};
 
 typedef union {
     struct {
