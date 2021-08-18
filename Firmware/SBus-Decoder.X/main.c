@@ -60,7 +60,7 @@ void main(void) {
                 serialTasks();
             }
         }
-    }
+    } 
     mode = settings.requestedMode;
     configPMD();
     configInterrupts();
@@ -71,7 +71,7 @@ void main(void) {
     }
     lockPPS();
     WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
-    //WDTCON0bits.SEN = 1;  //TODO re-enable WDT after testing sequencer
+    WDTCON0bits.SEN = 1;  //TODO re-enable WDT after testing sequencer
     while (1) {
         switch (mode) {
             case SBUS_DECODER: 

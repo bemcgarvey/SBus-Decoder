@@ -17,9 +17,9 @@ enum {
 uint8_t seqState = SEQ_IDLE;
 uint8_t seqCurrentStep = 0;
 uint8_t seqNumSteps = 0;
-volatile int16_t seqCountdown = 0; 
-SequenceStep *pStep;          
-int16_t lastServoPos[NUM_OUTPUTS + 1] = {-1, -1, -1, -1, -1};  //Need extra since outputs are 1 based
+volatile int16_t seqCountdown = 0;
+SequenceStep *pStep;
+int16_t lastServoPos[NUM_OUTPUTS + 1] = {-1, -1, -1, -1, -1}; //Need extra since outputs are 1 based
 int16_t servoIncrement;
 volatile int16_t moveServoPos;
 uint8_t activeOutput;
@@ -82,22 +82,27 @@ void sequencerTasks(void) {
         } else {
             if (pStep->type == DELAY) {
                 seqState = SEQ_DELAY;
-                seqCountdown = (int16_t)(pStep->time * 2);
+                seqCountdown = (int16_t) (pStep->time * 2);
                 T4TMR = 0;
                 T4CONbits.ON = 1;
             } else {
                 activeOutput = pStep->output;
                 finalPos = pStep->position;
                 if (pStep->time == 0 || lastServoPos[activeOutput] < 0) {
-                    //TODO if first move put in a delay instead?
-                    setServo(activeOutput, (uint16_t)finalPos);
+                    setServo(activeOutput, (uint16_t) finalPos);
+                    if (lastServoPos[activeOutput] < 0) {
+                        seqState = SEQ_DELAY;
+                        seqCountdown = (int16_t) (pStep->time * 2);
+                        T4TMR = 0;
+                        T4CONbits.ON = 1;
+                    }
                     lastServoPos[activeOutput] = finalPos;
                 } else {
-                    seqCountdown = (int16_t)(pStep->time * 2);
+                    seqCountdown = (int16_t) (pStep->time * 2);
                     servoIncrement = (finalPos - lastServoPos[activeOutput])
                             / (seqCountdown + 1);
                     moveServoPos = lastServoPos[activeOutput] + servoIncrement;
-                    setServo(activeOutput, (uint16_t)moveServoPos);
+                    setServo(activeOutput, (uint16_t) moveServoPos);
                     seqState = SEQ_MOVE;
                     T4TMR = 0;
                     T4CONbits.ON = 1;
@@ -112,12 +117,12 @@ void sequencerTasks(void) {
         }
     } else if (seqState == SEQ_MOVE) {
         if (seqCountdown == 0) {
-            setServo(activeOutput, (uint16_t)finalPos);
+            setServo(activeOutput, (uint16_t) finalPos);
             lastServoPos[activeOutput] = finalPos;
             seqState = SEQ_RUNNING;
         } else if (updateMove) {
             updateMove = 0;
-            setServo(activeOutput, (uint16_t)moveServoPos);
+            setServo(activeOutput, (uint16_t) moveServoPos);
         }
     }
 }
