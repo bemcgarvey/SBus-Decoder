@@ -14,6 +14,8 @@
 #include "version.h"
 #include "settings.h"
 #include "string.h"
+#include "servo.h"
+#include "led.h"
 
 void txBytes(uint8_t *buff, uint8_t count);
 
@@ -22,6 +24,9 @@ bool detectSerial(void) {
     TRISCbits.TRISC1 = 1;
     __delay_ms(1);
     if (PORTCbits.RC1 == 0) {
+        LATCbits.LATC1 = 0;
+        TRISCbits.TRISC1 = 0;
+        WPUCbits.WPUC1 = 0;
         return true;
     } else {
         TRISCbits.TRISC1 = 0;
@@ -52,6 +57,7 @@ void serialTasks(void) {
     uint8_t len;
     uint8_t *p;
     uint8_t chksum;
+    uint16_t servoValue; 
     while (PIR8bits.U2RXIF == 0);
     rx = U2RXB;
     switch (rx) {
@@ -85,6 +91,19 @@ void serialTasks(void) {
             }
             while (!PIR8bits.U2TXIF);
             U2TXB = ackVal;
+            break;
+        case 't':
+            while (!PIR8bits.U2RXIF);
+            rx = U2RXB;
+            while (!PIR8bits.U2RXIF);
+            servoValue = U2RXB;
+            servoValue <<= 8;
+            servoValue |= rx;
+            PWMEN = 0b100;
+            setServo(4, servoValue);
+            break;
+        case 'x':
+            PWMEN = 0;
             break;
     }
 }

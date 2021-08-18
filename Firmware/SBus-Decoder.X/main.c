@@ -56,6 +56,7 @@ void main(void) {
             mode = SERIAL_CONNECTED;
             ledOn();
             initSerial();
+            initSerialServo();
             while (1) {
                 serialTasks();
             }

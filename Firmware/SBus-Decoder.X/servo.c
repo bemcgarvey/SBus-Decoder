@@ -92,17 +92,34 @@ void initSequencerServos(void) {
     PWMEN = enable; //Turn on active outputs
 }
 
+void initSerialServo(void) {
+    RC1PPS = 0x0f; //PWM3S1P2_OUT
+    //Setup NCO for 2048000 MHz
+    NCO1CONbits.EN = 0;
+    NCO1CONbits.PFM = 0; //FDC mode
+    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
+    NCO1ACC = 0;
+    NCO1INC = 67109;
+    NCO1CONbits.EN = 1;
+    //setup PWM
+    PWMEN = 0; //all off
+    PWM3CLK = 0b1010;
+    PWM3PR = calculatePeriod(FRAME_50HZ);
+    PWM3S1CFGbits.MODE = 0b000;
+    PWM3S1P2 = 0;
+}
+
 void setServo(uint8_t output, uint16_t value) {
     value += 2048;
     switch (output) {
         case 1: PWM1S1P1 = value;
-        break;
+            break;
         case 2: PWM2S1P1 = value;
-        break;
+            break;
         case 3: PWM3S1P1 = value;
-        break;
+            break;
         case 4: PWM3S1P2 = value;
-        break;
+            break;
     }
     PWMLOAD = 0b111; //Load all
 }

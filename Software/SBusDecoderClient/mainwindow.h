@@ -70,5 +70,7 @@ private slots:
     void on_highUpButton_clicked();
     void on_highDownButton_clicked();
     void on_tabWidget_currentChanged(int index);
+public slots:
+    void setServo(int16_t value);
 };
 #endif // MAINWINDOW_H

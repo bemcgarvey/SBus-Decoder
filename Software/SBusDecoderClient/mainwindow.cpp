@@ -279,9 +279,31 @@ void MainWindow::on_out3FrameRate_currentIndexChanged(int index)
 
 void MainWindow::on_writePushButton_clicked()
 {
+    updateSettings();
+    if (settings.requestedMode == SERVO_SEQUENCER) {
+        bool valid = true;
+        if (settings.options & SBUS_PASSTHROUGH4) {
+            for (int i = 0; i < settings.numLowSteps; ++i) {
+                if (settings.lowSteps[i].output == 4) {
+                    valid = false;
+                }
+            }
+            for (int i = 0; i < settings.numHighSteps; ++i) {
+                if (settings.highSteps[i].output == 4) {
+                    valid = false;
+                }
+            }
+            if (!valid) {
+                QMessageBox::warning(this, QApplication::applicationName(),
+                    "sBus passthrough is enabled on output 4"
+                    " and at least one event uses output 4.  "
+                    "Please correct the conflict before proceeding.");
+                return;
+            }
+        }
+    }
     char cmd = 'u';
     port->write(&cmd, 1);
-    updateSettings();
     port->write(reinterpret_cast<char *>(&settings.requestedMode), sizeof(Settings));
     uint8_t chksum = calcChecksum(reinterpret_cast<uint8_t *>(&settings));
     port->write(reinterpret_cast<char *>(&chksum), 1);
@@ -373,6 +395,7 @@ void MainWindow::on_lowPlusButton_clicked()
             select = currentRow + 1;
         }
         unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[select]));
+        //connect(dlg.get(), &StepDialog::setServo, this, &MainWindow::setServo);
         if (dlg->exec() == QDialog::Rejected) {
             lowSteps.removeAt(select);
             select = currentRow;
@@ -545,6 +568,22 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 {
     if (index == 1) {
         ui->passThrough3->setChecked(false);
+    }
+}
+
+void MainWindow::setServo(int16_t value)
+{
+    //qDebug() << value;
+    if (port) {
+        char cmd;
+        if (value >= 0) {
+            cmd = 't';
+            port->write(&cmd, 1);
+            port->write(reinterpret_cast<char *>(&value), 2);
+        } else {
+            cmd = 'x';
+            port->write(&cmd, 1);
+        }
     }
 }
 
