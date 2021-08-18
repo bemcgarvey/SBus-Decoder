@@ -57,7 +57,8 @@ private slots:
     void on_seqPassThrough_stateChanged(int arg1);
     void on_lowPlusButton_clicked();
     void on_lowSequenceList_itemDoubleClicked(QListWidgetItem *item);
-    void updateSequenceLists(void);
+    void updateLowSequenceList(int select = -1);
+    void updateHighSequenceList(int select = -1);
     void on_lowXButton_clicked();
     void on_highPlusButton_clicked();
     void on_highXButton_clicked();

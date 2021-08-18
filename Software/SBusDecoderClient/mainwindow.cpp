@@ -10,6 +10,7 @@
 #include <cmath>
 
 //TODO remove qDebugs
+//TODO add servo reverser page
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -78,7 +79,8 @@ void MainWindow::updateControls()
     for (int i = 0; i < settings.numHighSteps; ++i) {
         highSteps.append(settings.highSteps[i]);
     }
-    updateSequenceLists();
+    updateLowSequenceList();
+    updateHighSequenceList();
 }
 
 void MainWindow::updateSettings()
@@ -355,21 +357,27 @@ void MainWindow::on_seqPassThrough_stateChanged(int arg1)
 
 void MainWindow::on_lowPlusButton_clicked()
 {
+    int currentRow = ui->lowSequenceList->currentRow();
+    int select = -1;
     if (lowSteps.size() < MAX_SEQUENCE_STEPS) {
         SequenceStep step;
         step.output = 1;
         step.type = SERVO;
         step.position = 0;
         step.time = 0;
-        lowSteps.append(step);
-        updateSequenceLists();
-        ui->lowSequenceList->setCurrentRow(lowSteps.size() - 1);
-        int stepNum = ui->lowSequenceList->currentRow();
-        unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[stepNum]));
-        if (dlg->exec() == QDialog::Rejected) {
-            lowSteps.removeLast();
+        if (currentRow == lowSteps.size() - 1 || currentRow < 0) {
+            lowSteps.append(step);
+            select = lowSteps.size() - 1;
+        } else {
+            lowSteps.insert(currentRow + 1, step);
+            select = currentRow + 1;
         }
-        updateSequenceLists();
+        unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[select]));
+        if (dlg->exec() == QDialog::Rejected) {
+            lowSteps.removeAt(select);
+            select = currentRow;
+        }
+        updateLowSequenceList(select);
     }
 }
 
@@ -380,50 +388,60 @@ void MainWindow::on_lowSequenceList_itemDoubleClicked(QListWidgetItem *item)
     int stepNum = ui->lowSequenceList->currentRow();
     unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[stepNum]));
     if (dlg->exec() == QDialog::Accepted) {
-        updateSequenceLists();
+        updateLowSequenceList(stepNum);
     }
 }
 
-void MainWindow::updateSequenceLists()
+void MainWindow::updateLowSequenceList(int select)
 {
     ui->lowSequenceList->clear();
     for (auto &&i : lowSteps) {
         ui->lowSequenceList->addItem(itemString(i));
     }
+    ui->lowSequenceList->setCurrentRow(select);
+}
+
+void MainWindow::updateHighSequenceList(int select) {
     ui->highSequenceList->clear();
     for (auto &&i : highSteps) {
         ui->highSequenceList->addItem(itemString(i));
     }
+    ui->highSequenceList->setCurrentRow(select);
 }
-
 
 void MainWindow::on_lowXButton_clicked()
 {
     int stepNum = ui->lowSequenceList->currentRow();
     if (stepNum >= 0) {
         lowSteps.removeAt(stepNum);
-        updateSequenceLists();
+        updateLowSequenceList(std::max(0, stepNum - 1));
     }
 }
 
 
 void MainWindow::on_highPlusButton_clicked()
 {
+    int currentRow = ui->highSequenceList->currentRow();
+    int select = -1;
     if (highSteps.size() < MAX_SEQUENCE_STEPS) {
         SequenceStep step;
         step.output = 1;
         step.type = SERVO;
         step.position = 0;
         step.time = 0;
-        highSteps.append(step);
-        updateSequenceLists();
-        ui->highSequenceList->setCurrentRow(highSteps.size() - 1);
-        int stepNum = ui->highSequenceList->currentRow();
-        unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[stepNum]));
-        if (dlg->exec() == QDialog::Rejected) {
-            highSteps.removeLast();
+        if (currentRow == highSteps.size() - 1 || currentRow < 0) {
+            highSteps.append(step);
+            select = highSteps.size() - 1;
+        } else {
+            highSteps.insert(currentRow + 1, step);
+            select = currentRow + 1;
         }
-        updateSequenceLists();
+        unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[select]));
+        if (dlg->exec() == QDialog::Rejected) {
+            highSteps.removeAt(select);
+            select = currentRow;
+        }
+        updateHighSequenceList(select);
     }
 }
 
@@ -433,7 +451,7 @@ void MainWindow::on_highXButton_clicked()
     int stepNum = ui->highSequenceList->currentRow();
     if (stepNum >= 0) {
         highSteps.removeAt(stepNum);
-        updateSequenceLists();
+        updateHighSequenceList(std::max(0, stepNum - 1));
     }
 }
 
@@ -444,7 +462,7 @@ void MainWindow::on_highSequenceList_itemDoubleClicked(QListWidgetItem *item)
     int stepNum = ui->highSequenceList->currentRow();
     unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[stepNum]));
     if (dlg->exec() == QDialog::Accepted) {
-        updateSequenceLists();
+        updateHighSequenceList(stepNum);
     }
 }
 
@@ -454,8 +472,7 @@ void MainWindow::on_lowUpButton_clicked()
     int pos = ui->lowSequenceList->currentRow();
     if (pos > 0) {
         lowSteps.swapItemsAt(pos, pos - 1);
-        updateSequenceLists();
-        ui->lowSequenceList->setCurrentRow(pos - 1);
+        updateLowSequenceList(pos - 1);
     }
 }
 
@@ -465,28 +482,41 @@ void MainWindow::on_lowDownButton_clicked()
     int pos = ui->lowSequenceList->currentRow();
     if (pos >= 0 && pos < lowSteps.size() - 1) {
         lowSteps.swapItemsAt(pos, pos + 1);
-        updateSequenceLists();
-        ui->lowSequenceList->setCurrentRow(pos + 1);
+        updateLowSequenceList(pos + 1);
     }
 }
 
 
 void MainWindow::on_rightButton_clicked()
 {
-    int pos = ui->lowSequenceList->currentRow();
-    if (pos >= 0 && highSteps.size() < MAX_SEQUENCE_STEPS) {
-        highSteps.append(lowSteps[pos]);
-        updateSequenceLists();
+    int lowPos = ui->lowSequenceList->currentRow();
+    int highPos = ui->highSequenceList->currentRow();
+    if (lowPos >= 0 && highSteps.size() < MAX_SEQUENCE_STEPS) {
+        if (highPos < 0) {
+            highSteps.append(lowSteps[lowPos]);
+            highPos = highSteps.size() - 1;
+        } else {
+            highPos += 1;
+            highSteps.insert(highPos, lowSteps[lowPos]);
+        }
+        updateHighSequenceList(highPos);
     }
 }
 
 
 void MainWindow::on_leftButton_clicked()
 {
-    int pos = ui->highSequenceList->currentRow();
-    if (pos >= 0 && lowSteps.size() < MAX_SEQUENCE_STEPS) {
-        lowSteps.append(highSteps[pos]);
-        updateSequenceLists();
+    int lowPos = ui->lowSequenceList->currentRow();
+    int highPos = ui->highSequenceList->currentRow();
+    if (highPos >= 0 && lowSteps.size() < MAX_SEQUENCE_STEPS) {
+        if (lowPos < 0) {
+            lowSteps.append(highSteps[highPos]);
+            lowPos = lowSteps.size() - 1;
+        } else {
+            lowPos += 1;
+            lowSteps.insert(lowPos, highSteps[highPos]);
+        }
+        updateLowSequenceList(lowPos);
     }
 }
 
@@ -496,8 +526,7 @@ void MainWindow::on_highUpButton_clicked()
     int pos = ui->highSequenceList->currentRow();
     if (pos > 0) {
         highSteps.swapItemsAt(pos, pos - 1);
-        updateSequenceLists();
-        ui->highSequenceList->setCurrentRow(pos - 1);
+        updateHighSequenceList(pos - 1);
     }
 }
 
@@ -507,8 +536,7 @@ void MainWindow::on_highDownButton_clicked()
     int pos = ui->highSequenceList->currentRow();
     if (pos >= 0 && pos < highSteps.size() - 1) {
         highSteps.swapItemsAt(pos, pos + 1);
-        updateSequenceLists();
-        ui->highSequenceList->setCurrentRow(pos + 1);
+        updateHighSequenceList(pos + 1);
     }
 }
 
