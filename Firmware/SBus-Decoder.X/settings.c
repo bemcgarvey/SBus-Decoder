@@ -20,7 +20,8 @@ Settings settings = {
     {{0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0},
     {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0}}
+    {0, 0, 0, 0, 0}},
+    1, 0, 0, 0
 };
 
 const Settings defaultSettings = {
@@ -28,7 +29,8 @@ const Settings defaultSettings = {
     {{0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0},
-    {0, FRAME_50HZ, FAIL_LAST, 0, 0}}
+    {0, FRAME_50HZ, FAIL_LAST, 0, 0}},
+    1, 0, 0, 0
 };
 
 void writeEE(uint16_t address, uint8_t* bytes, uint16_t count);
@@ -49,6 +51,11 @@ bool loadSettings(void) {
 
 bool saveSettings(void) {
     uint8_t chksum;
+    //Clear unused steps
+    memset(&settings.lowSteps[settings.numLowSteps], 0xff
+            , (MAX_SEQUENCE_STEPS - settings.numLowSteps) * sizeof(SequenceStep));
+    memset(&settings.highSteps[settings.numHighSteps], 0xff
+            , (MAX_SEQUENCE_STEPS - settings.numHighSteps) * sizeof(SequenceStep));
     chksum = calcChecksum((uint8_t *)&settings);
     uint16_t eeAddress = EE_START_ADDRESS;
     writeEE(eeAddress, (uint8_t *)&settings, sizeof (Settings));

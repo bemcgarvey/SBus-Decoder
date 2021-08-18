@@ -12,16 +12,19 @@ SOURCES += \
     aboutdialog.cpp \
     main.cpp \
     mainwindow.cpp \
-    sbus_settings.cpp
+    sbus_settings.cpp \
+    stepdialog.cpp
 
 HEADERS += \
     aboutdialog.h \
     mainwindow.h \
-    sbus_settings.h
+    sbus_settings.h \
+    stepdialog.h
 
 FORMS += \
     aboutdialog.ui \
-    mainwindow.ui
+    mainwindow.ui \
+    stepdialog.ui
 
 # Default rules for deployment.
 qnx: target.path = /tmp/$${TARGET}/bin

@@ -17,18 +17,14 @@
 #include "timers.h"
 #include "servo.h"
 #include "settings.h"
+#include "sequencer.h"
 
 void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
-//TODO enable WDT
-//TODO enable BOR??
-//TODO check configuration bits. 
 //TODO Use PMD to turn off unused modules
 //TODO Final warning check
-
-bool failsafeEngaged = 0;
 
 void main(void) {
     uint8_t mode = INITIALIZING;
@@ -50,152 +46,41 @@ void main(void) {
     if (mode != WDT) {
         if (!loadSettings()) {
             if (!setDefaultSettings()) {
-                ledOn();
-                while (1);
+                while (1) {
+                    ledToggle();
+                    __delay_ms(200);
+                }
             }
         }
         if (detectSerial()) {
             mode = SERIAL_CONNECTED;
             ledOn();
             initSerial();
+            initSerialServo();
             while (1) {
                 serialTasks();
             }
         }
-    }
+    } 
     mode = settings.requestedMode;
     configPMD();
     configInterrupts();
-    initServos();
-    initSBus();
-    initTimer2();
+    if (mode == SBUS_DECODER) {
+        initSBusDecoder();
+    } else if (mode == SERVO_SEQUENCER) {
+        initSequencer();
+    }
     lockPPS();
-    int packetCount = 0;
     WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
-    WDTCON0bits.SEN = 1;
+    WDTCON0bits.SEN = 1;  //TODO re-enable WDT after testing sequencer
     while (1) {
-        int16_t pulse;
-        if (!failsafeEngaged && sBusPacketTicks == 0) {
-            failsafeEngaged = true;
-            ledOff();
-            if (settings.outputs[0].failsafeMode == FAIL_OFF) {
-                PWM1S1P1 = 0;
-            } else if (settings.outputs[0].failsafeMode == FAIL_NEUTRAL) {
-                pulse = 1023 + settings.outputs[0].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM1S1P1 = (uint16_t) (2048 + pulse);
-            }
-            if (settings.outputs[1].failsafeMode == FAIL_OFF) {
-                PWM2S1P1 = 0;
-            } else if (settings.outputs[1].failsafeMode == FAIL_NEUTRAL) {
-                pulse = 1023 + settings.outputs[1].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM2S1P1 = (uint16_t) (2048 + pulse);
-            }
-            if (settings.outputs[2].failsafeMode == FAIL_OFF) {
-                PWM3S1P1 = 0;
-            } else if (settings.outputs[2].failsafeMode == FAIL_NEUTRAL) {
-                pulse = 1023 + settings.outputs[2].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM3S1P1 = (uint16_t) (2048 + pulse);
-            }
-            if (settings.outputs[3].failsafeMode == FAIL_OFF) {
-                PWM3S1P2 = 0;
-            } else if (settings.outputs[3].failsafeMode == FAIL_NEUTRAL) {
-                pulse = 1023 + settings.outputs[3].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM3S1P2 = (uint16_t) (2048 + pulse);
-            }
-            PWMLOAD = 0b111; //Load all
-        }
-        if (packetUpdate) {
-            packetUpdate = false;
-            failsafeEngaged = false;
-            uint8_t channel;
-            channel = settings.outputs[0].channel;
-            if (channel != 0) {
-                if (settings.outputs[0].reverse) {
-                    pulse = 2047 - decodeChannel(channel);
-                } else {
-                    pulse = decodeChannel(channel);
-                }
-                pulse += settings.outputs[0].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM1S1P1 = (uint16_t) (2048 + pulse);
-            }
-            channel = settings.outputs[1].channel;
-            if (channel != 0) {
-                if (settings.outputs[1].reverse) {
-                    pulse = 2047 - decodeChannel(channel);
-                } else {
-                    pulse = decodeChannel(channel);
-                }
-                pulse += settings.outputs[1].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM2S1P1 = (uint16_t) (2048 + pulse);
-            }
-            channel = settings.outputs[2].channel;
-            if (channel != 0) {
-                if (settings.outputs[2].reverse) {
-                    pulse = 2047 - decodeChannel(channel);
-                } else {
-                    pulse = decodeChannel(channel);
-                }
-                pulse += settings.outputs[2].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM3S1P1 = (uint16_t) (2048 + pulse);
-            }
-            channel = settings.outputs[3].channel;
-            if (channel != 0) {
-                if (settings.outputs[3].reverse) {
-                    pulse = 2047 - decodeChannel(channel);
-                } else {
-                    pulse = decodeChannel(channel);
-                }
-                pulse += settings.outputs[3].subTrim;
-                if (pulse < 0) {
-                    pulse = 0;
-                } else if (pulse > 2047) {
-                    pulse = 2047;
-                }
-                PWM3S1P2 = (uint16_t) (2048 + pulse);
-            }
-            PWMLOAD = 0b111; //Load all
-            ++packetCount;
-            if (packetCount == 300) {
-                ledOn();
-            } else if (packetCount == 305) {
-                ledOff();
-                packetCount = 0;
-            }
+        switch (mode) {
+            case SBUS_DECODER: 
+                sBusTasks();
+                break;
+            case SERVO_SEQUENCER:
+                sequencerTasks();
+                break;
         }
         CLRWDT();
     }

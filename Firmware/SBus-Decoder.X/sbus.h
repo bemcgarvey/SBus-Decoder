@@ -17,6 +17,8 @@
 #define SBUS_NUM_CHANNELS   16
 #define SBUS_TIMEOUT        100  //time in ms before failsafe
 
+enum {SBUS_LOW = 512, SBUS_HIGH = 1536};
+
 typedef union {
     struct {
         uint8_t channels[22];
@@ -34,8 +36,10 @@ typedef union {
 extern volatile SBusPacket rxPacket;
 extern volatile bool packetUpdate;
 
-void initSBus(void);
+void initSBusInput(void);
+void initSBusDecoder(void);
 int16_t decodeChannel(uint8_t channel);
+void sBusTasks(void);
 
 #endif	/* SBUS_H */
 
