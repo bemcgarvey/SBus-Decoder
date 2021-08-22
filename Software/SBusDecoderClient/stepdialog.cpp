@@ -1,7 +1,6 @@
 #include "stepdialog.h"
 #include "ui_stepdialog.h"
 #include <cmath>
-#include <QDebug>
 #include <QMessageBox>
 #include "mainwindow.h"
 

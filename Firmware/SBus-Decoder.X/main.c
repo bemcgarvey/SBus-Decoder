@@ -24,9 +24,6 @@ void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
-//TODO Use PMD to turn off unused modules
-//TODO Final warning check
-
 void main(void) {
     uint8_t mode = INITIALIZING;
     if (PCON0bits.RWDT == 0) {
@@ -118,12 +115,10 @@ void configInterrupts(void) {
 }
 
 void configPMD(void) {
-    /*
-    PMD0 = 0b01000111;
-    PMD1 = 0b10000001;
-    PMD2 = 0b01100110;
-    PMD3 = 0b01110011;
-    PMD4 = 0b00100010;
-    PMD5 = 0b00000111;
-     */
+    PMD0 = 0b01111111;
+    PMD1 = 0b11100000;
+    PMD2 = 0b11101111;
+    PMD3 = 0b00111000;
+    PMD4 = 0b11111101;
+    PMD5 = 0b00000011;
 }

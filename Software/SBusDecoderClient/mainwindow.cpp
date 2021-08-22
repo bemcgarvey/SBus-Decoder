@@ -3,13 +3,10 @@
 #include <QList>
 #include <QSerialPortInfo>
 #include <QMessageBox>
-#include <QtDebug>
 #include "aboutdialog.h"
 #include <QTimer>
 #include "stepdialog.h"
 #include <cmath>
-
-//TODO remove qDebugs
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -24,7 +21,6 @@ MainWindow::MainWindow(QWidget *parent)
     ui->statusbar->addWidget(connectedLabel);
     ui->statusbar->addPermanentWidget(versionLabel);
     connect(ui->menuPort, &QMenu::aboutToShow, this, &MainWindow::updatePortMenu);
-    //qDebug() << sizeof(Settings);
 }
 
 MainWindow::~MainWindow()
@@ -620,7 +616,6 @@ void MainWindow::on_tabWidget_currentChanged(int index)
 
 void MainWindow::setServo(int16_t value)
 {
-    //qDebug() << value;
     if (port) {
         char cmd;
         if (value >= 0) {
