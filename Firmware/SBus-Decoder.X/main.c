@@ -18,6 +18,7 @@
 #include "servo.h"
 #include "settings.h"
 #include "sequencer.h"
+#include "reverser.h"
 
 void lockPPS(void);
 void configInterrupts(void);
@@ -69,10 +70,12 @@ void main(void) {
         initSBusDecoder();
     } else if (mode == SERVO_SEQUENCER) {
         initSequencer();
+    } else if (mode == SERVO_REVERSER) {
+        initReverser();
     }
     lockPPS();
     WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
-    WDTCON0bits.SEN = 1;  //TODO re-enable WDT after testing sequencer
+    WDTCON0bits.SEN = 1;
     while (1) {
         switch (mode) {
             case SBUS_DECODER: 
@@ -80,6 +83,9 @@ void main(void) {
                 break;
             case SERVO_SEQUENCER:
                 sequencerTasks();
+                break;
+            case SERVO_REVERSER:
+                reverserTasks();
                 break;
         }
         CLRWDT();

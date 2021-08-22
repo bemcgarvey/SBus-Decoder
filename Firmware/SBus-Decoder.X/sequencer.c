@@ -1,3 +1,13 @@
+/////////////////////////////////////////////////////
+// Project: SBus-Decoder                           //
+// File: sequencer.c                               //
+// Target: PIC18F0xQ40                             // 
+// Compiler: XC8                                   //
+// Author: Brad McGarvey                           //
+// License: GNU General Public License v3.0        //
+// Description: Servo sequencer functions          //
+/////////////////////////////////////////////////////
+
 #include <xc.h>
 #include <stdint.h>
 #include <stdbool.h>
@@ -28,7 +38,7 @@ uint8_t updateMove = 0;
 
 void initSequencer(void) {
     initSequencerServos();
-    if (settings.seqInputType == SBUS) {
+    if (settings.inputType == SBUS) {
         initSBusInput();
     } else {
         initPWMinput();
@@ -49,10 +59,10 @@ void initSequencer(void) {
 }
 
 void sequencerTasks(void) {
-    if (settings.seqInputType == SBUS) {
+    if (settings.inputType == SBUS) {
         if (packetUpdate) {
             packetUpdate = false;
-            int16_t input = decodeChannel(settings.seqSbusChannel);
+            int16_t input = decodeChannel(settings.sBusChannel);
             if (input < SBUS_LOW) {
                 sequencerInput = INPUT_LOW;
             }

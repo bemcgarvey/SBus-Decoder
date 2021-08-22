@@ -25,7 +25,8 @@ enum FailsafeModes {
 };
 
 enum ModeType {
-    INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3, WDT = 99
+    INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERVO_REVERSER = 3
+    , SERIAL_CONNECTED = 4, WDT = 99
 };
 
 enum StepType {
@@ -51,9 +52,12 @@ typedef struct {
     struct {
         uint8_t sbusPassthrough4 : 1;
         uint8_t sbusPassthrough3 : 1;
-        uint8_t : 6;
+        uint8_t revOut1 : 1;
+        uint8_t revOut2 : 1;
+        uint8_t revOut3 : 1;
+        uint8_t revOut4 : 1;
+        uint8_t : 2;
     } options;
-
     struct {
         uint8_t channel;
         uint8_t frameRate;
@@ -61,10 +65,11 @@ typedef struct {
         uint8_t reverse;
         int16_t subTrim;
     } outputs[NUM_OUTPUTS];
-    uint8_t seqInputType;
+    uint8_t inputType;
     uint8_t numLowSteps;
     uint8_t numHighSteps;
-    uint8_t seqSbusChannel;
+    uint8_t sBusChannel;
+    uint16_t revSubTrim;
     SequenceStep lowSteps[MAX_SEQUENCE_STEPS];
     SequenceStep highSteps[MAX_SEQUENCE_STEPS];
 } Settings;

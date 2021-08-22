@@ -10,11 +10,10 @@
 #include <cmath>
 
 //TODO remove qDebugs
-//TODO add servo reverser page
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), port(nullptr)
+    , ui(new Ui::MainWindow), port(nullptr), firstTest(true)
 {
     ui->setupUi(this);
     setWindowTitle(QApplication::applicationName());
@@ -59,18 +58,25 @@ void MainWindow::updateControls()
     ui->out4subTrim->setValue(settings.outputs[3].subTrim);
     ui->passThrough4->setChecked(settings.options & SBUS_PASSTHROUGH4);
     ui->seqPassThrough->setChecked(settings.options & SBUS_PASSTHROUGH4);
+    ui->revPassThrough->setChecked(settings.options & SBUS_PASSTHROUGH4);
     ui->passThrough3->setChecked(settings.options & SBUS_PASSTHROUGH3);
     //Sequencer tab
-    if (settings.seqInputType == PWM) {
+    if (settings.inputType == PWM) {
         ui->pwmInputRadioButton->setChecked(true);
         ui->sBusInputRadioButton->setChecked(false);
         ui->sbusOptionsFrame->setEnabled(false);
+        ui->pwmInputRadioButton2->setChecked(true);
+        ui->sBusInputRadioButton2->setChecked(false);
+        ui->sbusOptionsFrame2->setEnabled(false);
     } else {
         ui->pwmInputRadioButton->setChecked(false);
         ui->sBusInputRadioButton->setChecked(true);
         ui->sbusOptionsFrame->setEnabled(true);
+        ui->pwmInputRadioButton2->setChecked(false);
+        ui->sBusInputRadioButton2->setChecked(true);
+        ui->sbusOptionsFrame2->setEnabled(true);
     }
-    ui->sBusInputChannel->setCurrentIndex(settings.seqSbusChannel);
+    ui->sBusInputChannel->setCurrentIndex(settings.sBusChannel);
     lowSteps.clear();
     for (int i = 0; i < settings.numLowSteps; ++i) {
         lowSteps.append(settings.lowSteps[i]);
@@ -81,7 +87,14 @@ void MainWindow::updateControls()
     }
     updateLowSequenceList();
     updateHighSequenceList();
+    //Reverser tab
+    ui->revOut1->setChecked(settings.options & REV_OUT1);
+    ui->revOut2->setChecked(settings.options & REV_OUT2);
+    ui->revOut3->setChecked(settings.options & REV_OUT3);
+    ui->revOut4->setChecked(settings.options & REV_OUT4);
+    ui->revSubTrim->setValue(settings.revSubTrim);
 }
+
 
 void MainWindow::updateSettings()
 {
@@ -117,13 +130,13 @@ void MainWindow::updateSettings()
     } else {
         settings.options &= ~SBUS_PASSTHROUGH3;
     }
-    //Sequencer tab
+    //Sequencer tab (some shared with reverser tab)
     if (ui->pwmInputRadioButton->isChecked()) {
-        settings.seqInputType = PWM;
+        settings.inputType = PWM;
     } else {
-        settings.seqInputType = SBUS;
+        settings.inputType = SBUS;
     }
-    settings.seqSbusChannel = ui->sBusInputChannel->currentIndex();
+    settings.sBusChannel = ui->sBusInputChannel->currentIndex();
     settings.numLowSteps = lowSteps.size();
     for (int i = 0; i < lowSteps.size(); ++i) {
         settings.lowSteps[i] = lowSteps[i];
@@ -131,6 +144,28 @@ void MainWindow::updateSettings()
     settings.numHighSteps = highSteps.size();
     for (int i = 0; i < highSteps.size(); ++i) {
         settings.highSteps[i] = highSteps[i];
+    }
+    //Reverser Tab
+    settings.revSubTrim = ui->revSubTrim->value();
+    if (ui->revOut1->isChecked()) {
+        settings.options |= REV_OUT1;
+    } else {
+        settings.options &= ~REV_OUT1;
+    }
+    if (ui->revOut2->isChecked()) {
+        settings.options |= REV_OUT2;
+    } else {
+        settings.options &= ~REV_OUT2;
+    }
+    if (ui->revOut3->isChecked()) {
+        settings.options |= REV_OUT3;
+    } else {
+        settings.options &= ~REV_OUT3;
+    }
+    if (ui->revOut4->isChecked()) {
+        settings.options |= REV_OUT4;
+    } else {
+        settings.options &= ~REV_OUT4;
     }
 }
 
@@ -349,15 +384,22 @@ void MainWindow::on_passThrough4_stateChanged(int arg1)
     if (arg1 != ui->seqPassThrough->isChecked()) {
         ui->seqPassThrough->setChecked(arg1);
     }
+    if (arg1 != ui->revPassThrough->isChecked()) {
+        ui->revPassThrough->setChecked(arg1);
+    }
 }
 
 
 void MainWindow::on_pwmInputRadioButton_clicked(bool checked)
 {
     ui->sbusOptionsFrame->setEnabled(!checked);
+    ui->sbusOptionsFrame2->setEnabled(!checked);
+    ui->pwmInputRadioButton2->setChecked(checked);
     if (checked) {
         ui->sBusInputChannel->setCurrentIndex(0);
         ui->seqPassThrough->setChecked(false);
+        ui->sBusInputChannel2->setCurrentIndex(0);
+        ui->revPassThrough->setChecked(false);
     }
 }
 
@@ -365,6 +407,8 @@ void MainWindow::on_pwmInputRadioButton_clicked(bool checked)
 void MainWindow::on_sBusInputRadioButton_clicked(bool checked)
 {
     ui->sbusOptionsFrame->setEnabled(checked);
+    ui->sbusOptionsFrame2->setEnabled(checked);
+    ui->sBusInputRadioButton2->setChecked(checked);
 }
 
 
@@ -373,6 +417,9 @@ void MainWindow::on_seqPassThrough_stateChanged(int arg1)
 {
     if (arg1 != ui->passThrough4->isChecked()) {
         ui->passThrough4->setChecked(arg1);
+    }
+    if (arg1 != ui->revPassThrough->isChecked()) {
+        ui->revPassThrough->setChecked(arg1);
     }
 }
 
@@ -385,7 +432,7 @@ void MainWindow::on_lowPlusButton_clicked()
         SequenceStep step;
         step.output = 1;
         step.type = SERVO;
-        step.position = 0;
+        step.position = 1024;
         step.time = 0;
         if (currentRow == lowSteps.size() - 1 || currentRow < 0) {
             lowSteps.append(step);
@@ -395,7 +442,6 @@ void MainWindow::on_lowPlusButton_clicked()
             select = currentRow + 1;
         }
         unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[select]));
-        //connect(dlg.get(), &StepDialog::setServo, this, &MainWindow::setServo);
         if (dlg->exec() == QDialog::Rejected) {
             lowSteps.removeAt(select);
             select = currentRow;
@@ -450,7 +496,7 @@ void MainWindow::on_highPlusButton_clicked()
         SequenceStep step;
         step.output = 1;
         step.type = SERVO;
-        step.position = 0;
+        step.position = 1024;
         step.time = 0;
         if (currentRow == highSteps.size() - 1 || currentRow < 0) {
             highSteps.append(step);
@@ -566,7 +612,8 @@ void MainWindow::on_highDownButton_clicked()
 
 void MainWindow::on_tabWidget_currentChanged(int index)
 {
-    if (index == 1) {
+    ui->testButton2->setChecked(false);
+    if (index != 0) {
         ui->passThrough3->setChecked(false);
     }
 }
@@ -584,6 +631,73 @@ void MainWindow::setServo(int16_t value)
             cmd = 'x';
             port->write(&cmd, 1);
         }
+    }
+}
+
+
+void MainWindow::on_sBusInputRadioButton2_clicked(bool checked)
+{
+    ui->sBusInputRadioButton->setChecked(checked);
+    on_sBusInputRadioButton_clicked(checked);
+}
+
+
+void MainWindow::on_pwmInputRadioButton2_clicked(bool checked)
+{
+    ui->pwmInputRadioButton->setChecked(checked);
+    on_pwmInputRadioButton_clicked(checked);
+}
+
+
+void MainWindow::on_revPassThrough_stateChanged(int arg1)
+{
+    if (arg1 != ui->passThrough4->isChecked()) {
+        ui->passThrough4->setChecked(arg1);
+    }
+    if (arg1 != ui->seqPassThrough->isChecked()) {
+        ui->seqPassThrough->setChecked(arg1);
+    }
+}
+
+
+void MainWindow::on_sBusInputChannel2_currentIndexChanged(int index)
+{
+    if (ui->sBusInputChannel->currentIndex() != index) {
+        ui->sBusInputChannel->setCurrentIndex(index);
+    }
+}
+
+
+void MainWindow::on_sBusInputChannel_currentIndexChanged(int index)
+{
+    if (ui->sBusInputChannel2->currentIndex() != index) {
+        ui->sBusInputChannel2->setCurrentIndex(index);
+    }
+}
+
+
+void MainWindow::on_testButton2_toggled(bool checked)
+{
+    if (checked) {
+        if (firstTest) {
+            firstTest = false;
+            QMessageBox::warning(this, QApplication::applicationName(),
+                                 "Before proceeding:\n"
+                                 "   1) Remove the bind plug from output 4\n"
+                                 "   2) Plug a servo into output 4\n"
+                                 "Failure to do so can result in damage to the output pin");
+        }
+        setServo(ui->revSubTrim->value() + 1024);
+    } else {
+        setServo(-1);
+    }
+}
+
+
+void MainWindow::on_revSubTrim_valueChanged(int arg1)
+{
+    if (ui->testButton2->isChecked()) {
+        setServo(arg1 + 1024);
     }
 }
 

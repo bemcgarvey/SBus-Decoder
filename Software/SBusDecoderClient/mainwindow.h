@@ -40,6 +40,7 @@ private:
     QList<SequenceStep> lowSteps;
     QList<SequenceStep> highSteps;
     QString itemString(const SequenceStep &step) const;
+    bool firstTest;
 private slots:
     void updatePortMenu(void);
     void comPortSelected(void);
@@ -70,7 +71,16 @@ private slots:
     void on_highUpButton_clicked();
     void on_highDownButton_clicked();
     void on_tabWidget_currentChanged(int index);
+    void on_sBusInputRadioButton2_clicked(bool checked);
+    void on_pwmInputRadioButton2_clicked(bool checked);
+    void on_revPassThrough_stateChanged(int arg1);
+    void on_sBusInputChannel2_currentIndexChanged(int index);
+    void on_sBusInputChannel_currentIndexChanged(int index);
+    void on_testButton2_toggled(bool checked);
+    void on_revSubTrim_valueChanged(int arg1);
+
 public slots:
     void setServo(int16_t value);
+
 };
 #endif // MAINWINDOW_H

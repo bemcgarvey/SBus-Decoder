@@ -124,6 +124,48 @@ void setServo(uint8_t output, uint16_t value) {
     PWMLOAD = 0b111; //Load all
 }
 
+void initReverserServos(void) {
+    RA0PPS = 0x0a; //PWM1S1P1_OUT
+    RA1PPS = 0x0c; //PWM2S1P1_OUT
+    RC0PPS = 0x0e; //PWM3S1P1_OUT
+    if (!settings.options.sbusPassthrough4) {
+        RC1PPS = 0x0f; //PWM3S1P2_OUT
+    }
+    //Setup NCO for 2048000 MHz
+    NCO1CONbits.EN = 0;
+    NCO1CONbits.PFM = 0; //FDC mode
+    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
+    NCO1ACC = 0;
+    NCO1INC = 67109;
+    NCO1CONbits.EN = 1;
+    //setup PWM
+    PWMEN = 0; //all off
+    PWM1CLK = 0b1010; //NCO1
+    PWM1PR = calculatePeriod(FRAME_50HZ);
+    PWM1S1CFGbits.MODE = 0b000; //left justified;
+    PWM1S1P1 = 0; //Start no pulse
+    PWM2CLK = 0b1010; //NCO1
+    PWM2PR = calculatePeriod(FRAME_50HZ);
+    PWM2S1CFGbits.MODE = 0b000;
+    PWM2S1P1 = 0;
+    PWM3CLK = 0b1010;
+    PWM3PR = calculatePeriod(FRAME_50HZ);
+    PWM3S1CFGbits.MODE = 0b000;
+    PWM3S1P1 = 0;
+    PWM3S1P2 = 0;
+    uint8_t enable = 0;
+    if (settings.options.revOut1) {
+        enable |= 0b001;
+    }
+    if (settings.options.revOut2) {
+        enable |= 0b010;
+    }
+    if (settings.options.revOut3 || settings.options.revOut4) {
+        enable |= 0b100;
+    }
+    PWMEN = enable; //Turn on active outputs
+}
+
 uint16_t calculatePeriod(uint8_t frameRate) {
     switch (frameRate) {
         case FRAME_50HZ: return 40960;

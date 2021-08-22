@@ -211,6 +211,12 @@
      </item>
      <item>
       <widget class="QSpinBox" name="endPosition">
+       <property name="accelerated">
+        <bool>true</bool>
+       </property>
+       <property name="correctionMode">
+        <enum>QAbstractSpinBox::CorrectToNearestValue</enum>
+       </property>
        <property name="keyboardTracking">
         <bool>false</bool>
        </property>

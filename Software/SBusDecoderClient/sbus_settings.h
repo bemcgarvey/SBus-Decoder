@@ -17,7 +17,8 @@ enum OperatingModes {
     INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3
 };
 
-enum OptionFlags {SBUS_PASSTHROUGH4 = 0x01, SBUS_PASSTHROUGH3 = 0x02, SEQUENCER_PWM_INPUT = 0x04};
+enum OptionFlags {SBUS_PASSTHROUGH4 = 0x01, SBUS_PASSTHROUGH3 = 0x02, REV_OUT1 = 0x04, REV_OUT2 = 0x08,
+                 REV_OUT3 = 0x10, REV_OUT4 = 0x20};
 
 enum StepTypes {
     SERVO = 0, DELAY = 1
@@ -46,10 +47,11 @@ typedef struct {
         uint8_t reverse;
         int16_t subTrim;
     } outputs[NUM_OUTPUTS];
-    uint8_t seqInputType;
+    uint8_t inputType;
     uint8_t numLowSteps;
     uint8_t numHighSteps;
-    uint8_t seqSbusChannel;
+    uint8_t sBusChannel;
+    uint16_t revSubTrim;
     SequenceStep lowSteps[MAX_SEQUENCE_STEPS];
     SequenceStep highSteps[MAX_SEQUENCE_STEPS];
 } Settings;
