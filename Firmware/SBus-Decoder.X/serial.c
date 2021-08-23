@@ -15,7 +15,6 @@
 #include "settings.h"
 #include "string.h"
 #include "servo.h"
-#include "led.h"
 
 void txBytes(uint8_t *buff, uint8_t count);
 
@@ -49,6 +48,7 @@ void initSerial(void) {
     U2CON0bits.MODE = 0; //8 bit no parity
     U2BRG = 138; //115200 baud
     U2CON1bits.ON = 1;
+    initSerialServo();
 }
 
 void serialTasks(void) {

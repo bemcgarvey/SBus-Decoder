@@ -15,7 +15,6 @@
 #include "sbus.h"
 #include "led.h"
 #include "timers.h"
-#include "servo.h"
 #include "settings.h"
 #include "sequencer.h"
 #include "reverser.h"
@@ -54,7 +53,6 @@ void main(void) {
             mode = SERIAL_CONNECTED;
             ledOn();
             initSerial();
-            initSerialServo();
             while (1) {
                 serialTasks();
             }
@@ -93,7 +91,7 @@ void lockPPS(void) {
     PPSLOCK = 0x55;
     PPSLOCK = 0xaa;
     PPSLOCKbits.PPSLOCKED = 1;
-    //Lock priority for good while were at it
+    //Lock priority while were at it
     PRLOCK = 0x55;
     PRLOCK = 0xAA;
     PRLOCKbits.PRLOCKED = 1;
@@ -119,6 +117,6 @@ void configPMD(void) {
     PMD1 = 0b11100000;
     PMD2 = 0b11101111;
     PMD3 = 0b00111000;
-    PMD4 = 0b11111101;
+    PMD4 = 0b11111001;
     PMD5 = 0b00000011;
 }

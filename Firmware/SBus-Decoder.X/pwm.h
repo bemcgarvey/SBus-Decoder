@@ -11,9 +11,9 @@
 #ifndef PWM_H
 #define	PWM_H
 
-enum {PULSE_LOW = 1250 * 4, PULSE_HIGH = 1750 * 4};
+enum {PWM_LOW = 512, PWM_HIGH = 1536};  //Same as SBUS values when using NCO for pulse timer
 
-extern volatile uint16_t pulse;
+extern volatile int16_t pwmPulse;
 extern volatile uint8_t pulseUpdate;
 void initPWMinput(void);
 

@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////
 // Project: SBus-Decoder                           //
-// File: reverser.h                                //
+// File: reverser.c                                //
 // Target: PIC18F0xQ40                             // 
 // Compiler: XC8                                   //
 // Author: Brad McGarvey                           //
@@ -39,16 +39,7 @@ void reverserTasks(void) {
         }
     } else if (pulseUpdate) {
         pulseUpdate = false;
-        long temp = pulse;
-        temp = ((temp - 4000) * 2048) / 4000;
-        newValue = (int16_t) temp;
-        if (newValue > 2047) {
-            newValue = 2047;
-        }
-        if (newValue < 0) {
-            newValue = 0;
-        }
-        newValue = calcReverseValue(newValue);
+        newValue = calcReverseValue(pwmPulse);
         update = true;
     }
     if (update) {
