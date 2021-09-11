@@ -10,7 +10,7 @@
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
-    , ui(new Ui::MainWindow), port(nullptr), firstTest(true)
+    , ui(new Ui::MainWindow), port(nullptr)
 {
     ui->setupUi(this);
     setWindowTitle(QApplication::applicationName());
@@ -42,7 +42,6 @@ void MainWindow::updateControls()
     ui->out3FrameRate->setCurrentIndex(settings.outputs[2].frameRate - 1);
     ui->out3Failsafe->setCurrentIndex(settings.outputs[2].failsafeMode - 1);
     ui->out4Channel->setCurrentIndex(settings.outputs[3].channel);
-    //ui->out4FrameRate->setCurrentIndex(settings.outputs[3].frameRate - 1);
     ui->out4Failsafe->setCurrentIndex(settings.outputs[3].failsafeMode - 1);
     ui->out1Reverse->setChecked(settings.outputs[0].reverse);
     ui->out1subTrim->setValue(settings.outputs[0].subTrim);
@@ -674,13 +673,15 @@ void MainWindow::on_sBusInputChannel_currentIndexChanged(int index)
 void MainWindow::on_testButton2_toggled(bool checked)
 {
     if (checked) {
-        if (firstTest) {
-            firstTest = false;
-            QMessageBox::warning(this, QApplication::applicationName(),
+        if (QMessageBox::warning(this, QApplication::applicationName(),
                                  "Before proceeding:\n"
                                  "   1) Remove the bind plug from output 4\n"
                                  "   2) Plug a servo into output 4\n"
-                                 "Failure to do so can result in damage to the output pin");
+                                 "Failure to do so can result in damage to the output pin",
+                                 QMessageBox::Ok | QMessageBox::Cancel)
+                == QMessageBox::Cancel) {
+            ui->testButton2->setChecked(false);
+            return;
         }
         setServo(ui->revSubTrim->value() + 1024);
     } else {

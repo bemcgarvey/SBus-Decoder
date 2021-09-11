@@ -6,7 +6,7 @@
 
 StepDialog::StepDialog(QWidget *parent, SequenceStep &st) :
     QDialog(parent),
-    ui(new Ui::StepDialog), step(st), firstTest(true)
+    ui(new Ui::StepDialog), step(st)
 {
     ui->setupUi(this);
     ui->servoStep->setChecked(step.type == SERVO);
@@ -18,9 +18,8 @@ StepDialog::StepDialog(QWidget *parent, SequenceStep &st) :
         ui->endPosition->setEnabled(false);
         ui->output->setEnabled(false);
         ui->testButton->setEnabled(false);
-    } else {
-        connect(this, &StepDialog::setServo, dynamic_cast<MainWindow *>(parent), &MainWindow::setServo);
     }
+    connect(this, &StepDialog::setServo, dynamic_cast<MainWindow *>(parent), &MainWindow::setServo);
 }
 
 StepDialog::~StepDialog()
@@ -71,13 +70,15 @@ void StepDialog::on_delayStep_clicked(bool checked)
 void StepDialog::on_testButton_toggled(bool checked)
 {
     if (checked) {
-        if (firstTest) {
-            firstTest = false;
-            QMessageBox::warning(this, QApplication::applicationName(),
+        if (QMessageBox::warning(this, QApplication::applicationName(),
                                  "Before proceeding:\n"
                                  "   1) Remove the bind plug from output 4\n"
                                  "   2) Plug a servo into output 4\n"
-                                 "Failure to do so can result in damage to the output pin");
+                                 "Failure to do so can result in damage to the output pin",
+                                 QMessageBox::Ok | QMessageBox::Cancel)
+                == QMessageBox::Cancel) {
+            ui->testButton->setChecked(false);
+            return;
         }
         int16_t position = round(ui->endPosition->value() * (1024.0 / 150.0)) + 1024;
         if (position > 2047) {

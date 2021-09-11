@@ -40,7 +40,6 @@ private:
     QList<SequenceStep> lowSteps;
     QList<SequenceStep> highSteps;
     QString itemString(const SequenceStep &step) const;
-    bool firstTest;
 private slots:
     void updatePortMenu(void);
     void comPortSelected(void);

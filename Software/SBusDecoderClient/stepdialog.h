@@ -22,13 +22,10 @@ private slots:
     void on_testButton_toggled(bool checked);
     void on_endPosition_valueChanged(int arg1);
     void on_okButton_clicked();
-
     void on_cancelButton_clicked();
-
 private:
     Ui::StepDialog *ui;
     SequenceStep &step;
-    bool firstTest;
 signals:
     void setServo(int16_t value);
 };
