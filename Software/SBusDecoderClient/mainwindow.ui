@@ -44,10 +44,10 @@
            </size>
           </property>
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::NoFrame</enum>
           </property>
           <property name="frameShadow">
-           <enum>QFrame::Raised</enum>
+           <enum>QFrame::Sunken</enum>
           </property>
           <layout class="QHBoxLayout" name="horizontalLayout_2">
            <item>
@@ -104,7 +104,7 @@
         <item>
          <widget class="QFrame" name="output1Frame">
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::Box</enum>
           </property>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
@@ -304,7 +304,7 @@
         <item>
          <widget class="QFrame" name="output2Frame">
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::Box</enum>
           </property>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
@@ -501,7 +501,7 @@
         <item>
          <widget class="QFrame" name="output3Frame">
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::Box</enum>
           </property>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
@@ -701,7 +701,7 @@
            <bool>true</bool>
           </property>
           <property name="frameShape">
-           <enum>QFrame::StyledPanel</enum>
+           <enum>QFrame::Box</enum>
           </property>
           <property name="frameShadow">
            <enum>QFrame::Raised</enum>
@@ -1196,6 +1196,12 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
               <property name="selectionMode">
                <enum>QAbstractItemView::SingleSelection</enum>
               </property>
@@ -1333,6 +1339,12 @@
                 <height>16777215</height>
                </size>
               </property>
+              <property name="frameShape">
+               <enum>QFrame::Box</enum>
+              </property>
+              <property name="frameShadow">
+               <enum>QFrame::Raised</enum>
+              </property>
               <property name="selectionMode">
                <enum>QAbstractItemView::SingleSelection</enum>
               </property>
@@ -1415,7 +1427,7 @@
           <item>
            <widget class="QFrame" name="frame_4">
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Box</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
@@ -1454,7 +1466,7 @@
              <bool>false</bool>
             </property>
             <property name="frameShape">
-             <enum>QFrame::StyledPanel</enum>
+             <enum>QFrame::Box</enum>
             </property>
             <property name="frameShadow">
              <enum>QFrame::Raised</enum>
