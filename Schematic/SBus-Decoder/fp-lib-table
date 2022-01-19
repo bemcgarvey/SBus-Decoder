@@ -1,4 +1,0 @@
-(fp_lib_table
-  (lib (name PIC16F18313)(type KiCad)(uri C:/Microchip-KiCad/ul_PIC16F18313ISN/KiCAD/2021-07-15_04-03-12/footprints.pretty)(options "")(descr ""))
-  (lib (name PIC18F0xQ40)(type KiCad)(uri C:/Microchip-KiCad/ul_PIC18F04Q40IST/KiCAD/2021-07-19_21-43-43/footprints.pretty)(options "")(descr ""))
-)
