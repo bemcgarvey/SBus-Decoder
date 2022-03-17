@@ -382,6 +382,11 @@ void MainWindow::on_passThrough4_stateChanged(int arg1)
     if (arg1 != ui->revPassThrough->isChecked()) {
         ui->revPassThrough->setChecked(arg1);
     }
+    ui->revOut4->setEnabled(!ui->passThrough4->isChecked());
+    if (ui->passThrough4->isChecked()) {
+        ui->revOut4->setChecked(false);
+    }
+
 }
 
 
@@ -436,7 +441,7 @@ void MainWindow::on_lowPlusButton_clicked()
             lowSteps.insert(currentRow + 1, step);
             select = currentRow + 1;
         }
-        unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[select]));
+        unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[select], !ui->passThrough4->isChecked()));
         if (dlg->exec() == QDialog::Rejected) {
             lowSteps.removeAt(select);
             select = currentRow;
@@ -450,7 +455,7 @@ void MainWindow::on_lowSequenceList_itemDoubleClicked(QListWidgetItem *item)
 {
     Q_UNUSED(item);
     int stepNum = ui->lowSequenceList->currentRow();
-    unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[stepNum]));
+    unique_ptr<StepDialog> dlg(new StepDialog(this, lowSteps[stepNum], !ui->passThrough4->isChecked()));
     if (dlg->exec() == QDialog::Accepted) {
         updateLowSequenceList(stepNum);
     }
@@ -500,7 +505,7 @@ void MainWindow::on_highPlusButton_clicked()
             highSteps.insert(currentRow + 1, step);
             select = currentRow + 1;
         }
-        unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[select]));
+        unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[select], !ui->passThrough4->isChecked()));
         if (dlg->exec() == QDialog::Rejected) {
             highSteps.removeAt(select);
             select = currentRow;
@@ -524,7 +529,7 @@ void MainWindow::on_highSequenceList_itemDoubleClicked(QListWidgetItem *item)
 {
     Q_UNUSED(item);
     int stepNum = ui->highSequenceList->currentRow();
-    unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[stepNum]));
+    unique_ptr<StepDialog> dlg(new StepDialog(this, highSteps[stepNum], !ui->passThrough4->isChecked()));
     if (dlg->exec() == QDialog::Accepted) {
         updateHighSequenceList(stepNum);
     }

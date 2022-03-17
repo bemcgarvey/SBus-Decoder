@@ -4,7 +4,7 @@
 #include <QMessageBox>
 #include "mainwindow.h"
 
-StepDialog::StepDialog(QWidget *parent, SequenceStep &st) :
+StepDialog::StepDialog(QWidget *parent, SequenceStep &st, bool out4Allowed) :
     QDialog(parent),
     ui(new Ui::StepDialog), step(st)
 {
@@ -18,6 +18,9 @@ StepDialog::StepDialog(QWidget *parent, SequenceStep &st) :
         ui->endPosition->setEnabled(false);
         ui->output->setEnabled(false);
         ui->testButton->setEnabled(false);
+    }
+    if (!out4Allowed) {
+        ui->output->removeItem(4);
     }
     connect(this, &StepDialog::setServo, dynamic_cast<MainWindow *>(parent), &MainWindow::setServo);
 }

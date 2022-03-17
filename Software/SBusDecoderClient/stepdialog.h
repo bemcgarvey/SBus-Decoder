@@ -13,7 +13,7 @@ class StepDialog : public QDialog
     Q_OBJECT
 
 public:
-    explicit StepDialog(QWidget *parent, SequenceStep &st);
+    explicit StepDialog(QWidget *parent, SequenceStep &st, bool out4Allowed);
     ~StepDialog();
 private slots:
     void on_StepDialog_accepted();
@@ -26,6 +26,7 @@ private slots:
 private:
     Ui::StepDialog *ui;
     SequenceStep &step;
+    bool allowOut4;
 signals:
     void setServo(int16_t value);
 };
