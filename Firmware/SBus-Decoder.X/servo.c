@@ -14,6 +14,7 @@
 #include "settings.h"
 
 uint16_t calculatePeriod(uint8_t frameRate);
+void initNCO(void);
 
 void initSbusServos(void) {
     RA0PPS = 0x0a; //PWM1S1P1_OUT
@@ -24,13 +25,7 @@ void initSbusServos(void) {
     if (!settings.options.sbusPassthrough4) {
         RC1PPS = 0x0f; //PWM3S1P2_OUT
     }
-    //Setup NCO for 2048000 MHz
-    NCO1CONbits.EN = 0;
-    NCO1CONbits.PFM = 0; //FDC mode
-    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
-    NCO1ACC = 0;
-    NCO1INC = 67109;
-    NCO1CONbits.EN = 1;
+    initNCO();
     //setup PWM
     PWMEN = 0; //all off
     PWM1CLK = 0b1010; //NCO1
@@ -66,13 +61,7 @@ void initSequencerServos(void) {
     if (!settings.options.sbusPassthrough4) {
         RC1PPS = 0x0f; //PWM3S1P2_OUT
     }
-    //Setup NCO for 2048000 MHz
-    NCO1CONbits.EN = 0;
-    NCO1CONbits.PFM = 0; //FDC mode
-    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
-    NCO1ACC = 0;
-    NCO1INC = 67109;
-    NCO1CONbits.EN = 1;
+    initNCO();
     //setup PWM
     PWMEN = 0; //all off
     PWM1CLK = 0b1010; //NCO1
@@ -94,13 +83,7 @@ void initSequencerServos(void) {
 
 void initSerialServo(void) {
     RC1PPS = 0x0f; //PWM3S1P2_OUT
-    //Setup NCO for 2048000 MHz
-    NCO1CONbits.EN = 0;
-    NCO1CONbits.PFM = 0; //FDC mode
-    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
-    NCO1ACC = 0;
-    NCO1INC = 67109;
-    NCO1CONbits.EN = 1;
+    initNCO();
     //setup PWM
     PWMEN = 0; //all off
     PWM3CLK = 0b1010;
@@ -110,7 +93,7 @@ void initSerialServo(void) {
 }
 
 void setServo(uint8_t output, uint16_t value) {
-    value += 2048;
+    value += PULSE_BASE;  
     switch (output) {
         case 1: PWM1S1P1 = value;
             break;
@@ -131,13 +114,7 @@ void initReverserServos(void) {
     if (!settings.options.sbusPassthrough4) {
         RC1PPS = 0x0f; //PWM3S1P2_OUT
     }
-    //Setup NCO for 2048000 MHz
-    NCO1CONbits.EN = 0;
-    NCO1CONbits.PFM = 0; //FDC mode
-    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
-    NCO1ACC = 0;
-    NCO1INC = 67109;
-    NCO1CONbits.EN = 1;
+    initNCO();
     //setup PWM
     PWMEN = 0; //all off
     PWM1CLK = 0b1010; //NCO1
@@ -166,11 +143,23 @@ void initReverserServos(void) {
     PWMEN = enable; //Turn on active outputs
 }
 
+
+void initNCO(void) {
+    //Setup NCO - see comments above for frequency
+    NCO1CONbits.EN = 0;
+    NCO1CONbits.PFM = 0; //FDC mode
+    NCO1CLKbits.CKS = 0; //Fosc at 64 MHz
+    NCO1ACC = 0;
+    NCO1INC = NCOINC_VALUE;
+    NCO1CONbits.EN = 1;
+}
+
 uint16_t calculatePeriod(uint8_t frameRate) {
+    //Values are calculated with NCO frequency
     switch (frameRate) {
-        case FRAME_50HZ: return 40960;
-        case FRAME_100HZ: return 20480;
-        case FRAME_150HZ: return 13653;
+        case FRAME_50HZ: return PERIOD_50HZ;
+        case FRAME_100HZ: return PERIOD_100HZ;
+        case FRAME_150HZ: return PERIOD_150HZ;
     }
-    return 40960; //50HZ default
+    return PERIOD_50HZ; //50HZ default
 }

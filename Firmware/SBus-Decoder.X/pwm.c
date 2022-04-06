@@ -13,6 +13,7 @@
 #include <stdbool.h>
 #include "pwm.h"
 #include "sequencer.h"
+#include "servo.h"
 
 volatile int16_t pwmPulse = 0;
 volatile uint8_t pulseUpdate = false;
@@ -35,7 +36,7 @@ void initPWMinput(void) {
     T1CONbits.ON = 0;
     T1CONbits.RD16 = 1;
     T1CONbits.CKPS = 0b000; //1:1 pre-scale 2048 counts per ms
-    T1CONbits.NOT_SYNC = 1; //Don't synch with Fosc/4 //TODO is this best?
+    T1CONbits.NOT_SYNC = 1; //Don't synch with Fosc/4 
     T1GPPS = 0b010011; //RC3
     T1GCONbits.GE = 1;
     T1GCONbits.GPOL = 1;
@@ -54,7 +55,7 @@ void initPWMinput(void) {
 
 void __interrupt(irq(TMR1G), low_priority, base(8)) T1GISR(void) {
     pwmPulse = (int16_t) (*(uint16_t *) & TMR1L);
-    pwmPulse -= 2048;
+    pwmPulse -= PULSE_BASE;
     if (pwmPulse > 2047) {
         pwmPulse = 2047;
     } else if (pwmPulse < 0) {
