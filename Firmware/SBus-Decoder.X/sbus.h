@@ -23,11 +23,11 @@ typedef union {
     struct {
         uint8_t channels[22];
         struct {
-            unsigned int : 4;
-            unsigned int failsafe : 1;
-            unsigned int frameLost : 1;
+			unsigned int channel17 : 1;
             unsigned int channel18 : 1;
-            unsigned int channel17 : 1;
+            unsigned int frameLost : 1;
+            unsigned int failsafe : 1;
+            unsigned int : 4;
         };
     };
     uint8_t bytes[23];

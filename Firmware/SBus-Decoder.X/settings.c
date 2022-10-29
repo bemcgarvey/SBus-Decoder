@@ -15,14 +15,7 @@
 
 #define EE_START_ADDRESS 0
 
-Settings settings = {
-    0, {0, 0},
-    {{0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0},
-    {0, 0, 0, 0, 0}},
-    1, 0, 0, 0, 0
-};
+__persistent Settings settings;
 
 const Settings defaultSettings = {
     SBUS_DECODER, {0, 0},

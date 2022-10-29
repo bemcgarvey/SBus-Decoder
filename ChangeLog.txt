@@ -1,0 +1,7 @@
+S.Bus decoder change log
+
+Firmware
+	Version 1.0 - First production version
+	Version 1.1 - Fixed S.Bus flags error (failsafe, ch17 and ch18)
+				  Improved watchdog behavior
+	

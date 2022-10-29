@@ -74,7 +74,7 @@ typedef struct {
     SequenceStep highSteps[MAX_SEQUENCE_STEPS];
 } Settings;
 
-extern Settings settings;
+extern __persistent Settings settings;
 
 bool loadSettings(void);
 bool saveSettings(void);

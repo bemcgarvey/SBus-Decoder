@@ -85,3 +85,4 @@ compile_commands.json
 **/release
 *object_script*
 *appdatalocaltemp*
+*.idx
