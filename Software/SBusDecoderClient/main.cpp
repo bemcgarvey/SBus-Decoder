@@ -1,13 +1,10 @@
 #include "mainwindow.h"
 
 #include <QApplication>
-#include <QStyleFactory>
 #include <QScreen>
 
 int main(int argc, char *argv[])
 {
-    QApplication::setStyle(QStyleFactory::create("Fusion"));
-    //QApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
     QApplication::setOrganizationName("QES");
     QApplication::setApplicationName("sBus Decoder");
     QApplication a(argc, argv);
