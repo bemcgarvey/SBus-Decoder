@@ -6,9 +6,15 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>415</width>
+    <width>448</width>
     <height>493</height>
    </rect>
+  </property>
+  <property name="minimumSize">
+   <size>
+    <width>448</width>
+    <height>493</height>
+   </size>
   </property>
   <property name="windowIcon">
    <iconset resource="resources.qrc">
@@ -2115,7 +2121,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>415</width>
+     <width>448</width>
      <height>22</height>
     </rect>
    </property>
