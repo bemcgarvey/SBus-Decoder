@@ -18,12 +18,13 @@
 __persistent Settings settings;
 
 const Settings defaultSettings = {
-    SBUS_DECODER, {0, 0},
+    SBUS_DECODER, {0, 0, 0, 0, 0, 0},
     {{0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0},
     {0, FRAME_50HZ, FAIL_LAST, 0, 0}},
-    1, 0, 0, 0, 0
+    1, 0, 0, 0, 0,
+    0, 2047, 10, 100, 200, 1024
 };
 
 void writeEE(uint16_t address, uint8_t* bytes, uint16_t count);

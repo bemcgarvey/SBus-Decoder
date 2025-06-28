@@ -14,7 +14,7 @@ enum FailsafeModes {
 };
 
 enum OperatingModes {
-    INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3
+    INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERIAL_CONNECTED = 3, RANDOMIZER = 5
 };
 
 enum OptionFlags {SBUS_PASSTHROUGH4 = 0x01, SBUS_PASSTHROUGH3 = 0x02, REV_OUT1 = 0x04, REV_OUT2 = 0x08,
@@ -52,6 +52,12 @@ typedef struct {
     uint8_t numHighSteps;
     uint8_t sBusChannel;
     uint16_t revSubTrim;
+    uint16_t random_min_servo;
+    uint16_t random_max_servo;
+    uint16_t random_min_time;
+    uint16_t random_max_time;
+    uint16_t random_min_move;
+    uint16_t random_max_move;
     SequenceStep lowSteps[MAX_SEQUENCE_STEPS];
     SequenceStep highSteps[MAX_SEQUENCE_STEPS];
 } Settings;

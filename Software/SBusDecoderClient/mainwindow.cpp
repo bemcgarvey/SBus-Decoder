@@ -88,6 +88,13 @@ void MainWindow::updateControls()
     ui->revOut3->setChecked(settings.options & REV_OUT3);
     ui->revOut4->setChecked(settings.options & REV_OUT4);
     ui->revSubTrim->setValue(settings.revSubTrim);
+    //Randomizer pad
+    ui->randMaxServo->setValue(settings.random_max_servo);
+    ui->randMinServo->setValue(settings.random_min_servo);
+    ui->randMaxMove->setValue(settings.random_max_move);
+    ui->randMinMove->setValue(settings.random_min_move);
+    ui->randMaxTime->setValue(settings.random_max_time / 10.0);
+    ui->randMinTime->setValue(settings.random_min_time / 10.0);
 }
 
 
@@ -161,6 +168,22 @@ void MainWindow::updateSettings()
         settings.options |= REV_OUT4;
     } else {
         settings.options &= ~REV_OUT4;
+    }
+    //Randomizer Tab
+    settings.random_max_servo = ui->randMaxServo->value();
+    settings.random_min_servo = ui->randMinServo->value();
+    if (settings.random_min_servo > settings.random_max_servo) {
+        settings.random_min_servo = settings.random_max_servo;
+    }
+    settings.random_max_move = ui->randMaxMove->value();
+    settings.random_min_move = ui->randMinMove->value();
+    if (settings.random_min_move > settings.random_max_move) {
+        settings.random_min_move = settings.random_max_move;
+    }
+    settings.random_max_time = static_cast<uint16_t>(ui->randMaxTime->value() * 10);
+    settings.random_min_time = static_cast<uint16_t>(ui->randMinTime->value() * 10);
+    if (settings.random_min_time > settings.random_max_time) {
+        settings.random_min_time = settings.random_max_time;
     }
 }
 

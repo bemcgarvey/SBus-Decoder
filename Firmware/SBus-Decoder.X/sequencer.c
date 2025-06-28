@@ -137,7 +137,7 @@ void sequencerTasks(void) {
     }
 }
 
-void __interrupt(irq(TMR4), high_priority, base(8)) TMR4ISR(void) {
+void sequencerISR(void) {
     --seqCountdown;
     if (seqCountdown == 0) {
         T4CONbits.ON = 0;
@@ -145,5 +145,4 @@ void __interrupt(irq(TMR4), high_priority, base(8)) TMR4ISR(void) {
         moveServoPos += servoIncrement;
         updateMove = 1;
     }
-    PIR10bits.TMR4IF = 0;
 }

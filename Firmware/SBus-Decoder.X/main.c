@@ -18,13 +18,15 @@
 #include "settings.h"
 #include "sequencer.h"
 #include "reverser.h"
+#include "randomizer.h"
+
+uint8_t mode = INITIALIZING;
 
 void lockPPS(void);
 void configInterrupts(void);
 void configPMD(void);
 
 void main(void) {
-    uint8_t mode = INITIALIZING;
     if (PCON0bits.RWDT == 0) {
         mode = WDT;
     }
@@ -67,6 +69,8 @@ void main(void) {
         initSequencer();
     } else if (mode == SERVO_REVERSER) {
         initReverser();
+    } else if (mode == RANDOMIZER) {
+        initRandomizer();
     }
     lockPPS();
     WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
@@ -81,6 +85,9 @@ void main(void) {
                 break;
             case SERVO_REVERSER:
                 reverserTasks();
+                break;
+            case RANDOMIZER:
+                randomizerTasks();
                 break;
         }
         CLRWDT();
@@ -119,4 +126,13 @@ void configPMD(void) {
     PMD3 = 0b00111000;
     PMD4 = 0b11111001;
     PMD5 = 0b00000011;
+}
+
+void __interrupt(irq(TMR4), high_priority, base(8)) TMR4ISR(void) {
+    if (mode == SERVO_SEQUENCER) {
+        sequencerISR();
+    } else if (mode == RANDOMIZER) {
+        randomizerISR();
+    }
+    PIR10bits.TMR4IF = 0;
 }

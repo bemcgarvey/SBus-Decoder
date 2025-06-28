@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>215</width>
-    <height>203</height>
+    <height>280</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -106,6 +106,23 @@
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>
+     </property>
+    </widget>
+   </item>
+   <item>
+    <widget class="QLabel" name="label_5">
+     <property name="text">
+      <string>For serial config: 
+            Bind plug on Output 4
+            Output 1 RX (of sBus Decoder)
+            Output 2 Gnd
+            Output 3 TX</string>
+     </property>
+     <property name="textFormat">
+      <enum>Qt::PlainText</enum>
+     </property>
+     <property name="wordWrap">
+      <bool>false</bool>
      </property>
     </widget>
    </item>

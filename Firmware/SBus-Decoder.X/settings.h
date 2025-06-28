@@ -26,7 +26,7 @@ enum FailsafeModes {
 
 enum ModeType {
     INITIALIZING = 0, SBUS_DECODER = 1, SERVO_SEQUENCER = 2, SERVO_REVERSER = 3
-    , SERIAL_CONNECTED = 4, WDT = 99
+    , SERIAL_CONNECTED = 98, RANDOMIZER = 4, WDT = 99
 };
 
 enum StepType {
@@ -70,6 +70,12 @@ typedef struct {
     uint8_t numHighSteps;
     uint8_t sBusChannel;
     uint16_t revSubTrim;
+    uint16_t random_min_servo;
+    uint16_t random_max_servo;
+    uint16_t random_min_time;
+    uint16_t random_max_time;
+    uint16_t random_min_move;
+    uint16_t random_max_move;
     SequenceStep lowSteps[MAX_SEQUENCE_STEPS];
     SequenceStep highSteps[MAX_SEQUENCE_STEPS];
 } Settings;

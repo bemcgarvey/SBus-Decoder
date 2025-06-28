@@ -93,7 +93,7 @@ void initSerialServo(void) {
 }
 
 void setServo(uint8_t output, uint16_t value) {
-    value += PULSE_BASE;  
+    value += PULSE_BASE;
     switch (output) {
         case 1: PWM1S1P1 = value;
             break;
@@ -143,6 +143,30 @@ void initReverserServos(void) {
     PWMEN = enable; //Turn on active outputs
 }
 
+void initRandomizerServos(void) {
+    RA0PPS = 0x0a; //PWM1S1P1_OUT
+    RA1PPS = 0x0c; //PWM2S1P1_OUT
+    RC0PPS = 0x0e; //PWM3S1P1_OUT
+    RC1PPS = 0x0f; //PWM3S1P2_OUT
+    initNCO();
+    //setup PWM
+    PWMEN = 0; //all off
+    PWM1CLK = 0b1010; //NCO1
+    PWM1PR = calculatePeriod(FRAME_50HZ);
+    PWM1S1CFGbits.MODE = 0b000; //left justified;
+    PWM1S1P1 = 0; //Start no pulse
+    PWM2CLK = 0b1010; //NCO1
+    PWM2PR = calculatePeriod(FRAME_50HZ);
+    PWM2S1CFGbits.MODE = 0b000;
+    PWM2S1P1 = 0;
+    PWM3CLK = 0b1010;
+    PWM3PR = calculatePeriod(FRAME_50HZ);
+    PWM3S1CFGbits.MODE = 0b000;
+    PWM3S1P1 = 0;
+    PWM3S1P2 = 0;
+    uint8_t enable = 0b111;
+    PWMEN = enable; //Turn on active outputs
+}
 
 void initNCO(void) {
     //Setup NCO - see comments above for frequency
