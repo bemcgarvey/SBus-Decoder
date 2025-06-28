@@ -19,7 +19,8 @@ HEADERS += \
     aboutdialog.h \
     mainwindow.h \
     sbus_settings.h \
-    stepdialog.h
+    stepdialog.h \
+    version.h
 
 FORMS += \
     aboutdialog.ui \

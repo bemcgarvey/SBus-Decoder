@@ -7,6 +7,7 @@
 #include <QTimer>
 #include "stepdialog.h"
 #include <cmath>
+#include "version.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -180,8 +181,8 @@ void MainWindow::updateSettings()
     if (settings.random_min_move > settings.random_max_move) {
         settings.random_min_move = settings.random_max_move;
     }
-    settings.random_max_time = static_cast<uint16_t>(ui->randMaxTime->value() * 10);
-    settings.random_min_time = static_cast<uint16_t>(ui->randMinTime->value() * 10);
+    settings.random_max_time = static_cast<uint16_t>(std::round(ui->randMaxTime->value() * 10));
+    settings.random_min_time = static_cast<uint16_t>(std::round(ui->randMinTime->value() * 10));
     if (settings.random_min_time > settings.random_max_time) {
         settings.random_min_time = settings.random_max_time;
     }
@@ -232,7 +233,6 @@ void MainWindow::comPortSelected()
         portLabel->setText(action->text());
         connectedLabel->setText("Connected");
         ui->readPushButton->setEnabled(true);
-        ui->writePushButton->setEnabled(true);
         action->setChecked(true);
         port->clear(QSerialPort::AllDirections);  //clear out extra bytes from device power on
         connect(port.get(), &QSerialPort::readyRead, this, &MainWindow::onReadyRead);
@@ -261,11 +261,19 @@ void MainWindow::onReadyRead()
                 versionLabel->setText(QString("Firmware Version %1.%2")
                         .arg(static_cast<int>(rxBuffer[0]))
                         .arg(static_cast<int>(rxBuffer[1])));
-                char cmd = 's';
-                port->write(&cmd, 1);
-                rxState = RX_SETTINGS;
-                bytesNeeded = sizeof(Settings) + 1; //Extra byte for checksum
-                bufferPos = rxBuffer;
+                if (rxBuffer[0] != MAJOR_VERSION || rxBuffer[1] != MINOR_VERSION) {
+                    rxState = RX_IDLE;
+                    QMessageBox::critical(this, QApplication::applicationName(),
+                                          "Firmware out of date.  Please update firmware.");
+                    ui->readPushButton->setEnabled(true);
+                    //ui->writePushButton->setEnabled(true);
+                } else {
+                    char cmd = 's';
+                    port->write(&cmd, 1);
+                    rxState = RX_SETTINGS;
+                    bytesNeeded = sizeof(Settings) + 1; //Extra byte for checksum
+                    bufferPos = rxBuffer;
+                }
             }
             break;
         case RX_SETTINGS:
