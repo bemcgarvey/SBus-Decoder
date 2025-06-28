@@ -73,7 +73,7 @@ void main(void) {
         initRandomizer();
     }
     lockPPS();
-    WDTCON0bits.PS = 0b00101; //Watchdog timer = 32ms
+    WDTCON0bits.PS = 0b00110; //Watchdog timer = 64ms
     WDTCON0bits.SEN = 1;
     while (1) {
         switch (mode) {

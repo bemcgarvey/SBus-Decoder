@@ -70,8 +70,8 @@ typedef struct {
     uint8_t numHighSteps;
     uint8_t sBusChannel;
     uint16_t revSubTrim;
-    uint16_t random_min_servo;
-    uint16_t random_max_servo;
+    int16_t random_min_servo;
+    int16_t random_max_servo;
     uint16_t random_min_time;
     uint16_t random_max_time;
     uint16_t random_min_move;

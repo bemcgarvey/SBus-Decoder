@@ -1,7 +1,10 @@
 S.Bus decoder change log
 
-Firmware
+Firmware and Client
 	Version 1.0 - First production version
 	Version 1.1 - Fixed S.Bus flags error (failsafe, ch17 and ch18)
 				  Improved watchdog behavior
+	Version 1.2 - Added randomizer
+
+
 	
